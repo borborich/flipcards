@@ -7,35 +7,99 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // Функция для загрузки нового слова и вариантов перевода
     function loadWord() {
-        
         console.log('Loading word...'); // Отладочный вывод
         const langParam = document.getElementById('word').getAttribute('data-lang'); // Получаем текущее направление языков
-        const url = langParam === 'invert' ? 'backend/get_word.php?lang=invert' : 'backend/get_word.php';
+        const themeParam = document.getElementById('theme-select').value; // Получаем выбранную тему
+        // Формируем URL с учетом выбранной темы
+        const url = langParam === 'invert' ? `backend/get_word.php?lang=invert&theme=${themeParam}` : `backend/get_word.php?theme=${themeParam}`;
 
-        fetch(url)
-            .then(response => {
-                console.log('Response received:', response); // Отладочный вывод
-                if (!response.ok) {
-                    throw new Error('Network response was not ok');
-                }
-                return response.json(); // Возврат Promise объекта для обработки далее
-            })
-            .then(data => {
-                console.log('Response json:', data); // Отладочный вывод
-                if (!data) {
-                    throw new Error('Empty response data');
-                }
-                document.getElementById('word').innerText = data.word;
-                const choices = document.querySelectorAll('.choice');
-                choices.forEach((choice, index) => {
-                    choice.innerText = data.choices[index];
-                    choice.classList.remove('correct', 'incorrect');
-                    choice.onclick = checkAnswer;
+        const maxAttempts = 10; // Максимальное количество попыток
+        let attempt = 0; // Счетчик попыток
+
+        const fetchWord = () => {
+            return fetch(url)
+                .then(response => {
+                    console.log('Response received:', response); // Отладочный вывод
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return response.json(); // Возврат Promise объекта для обработки далее
+                })
+                .then(data => {
+                    if (!data) {
+                        throw new Error('Empty response data');
+                    }
+                    // Проверяем, является ли ответ флагом завершения списка
+                    if (data.end_of_list) {
+                        // Показываем модальное окно об окончании списка слов
+                        showModal('Список слов закончился', 'Вы прошли все доступные слова. Хотите начать заново?', () => {
+                            // Очищаем список использованных слов
+                            clearUsedWords();
+                            // Вызываем функцию загрузки нового слова
+                            loadWord();
+                        });
+                        return;
+                    }
+
+
+                    document.getElementById('word').innerText = data.word;
+                    const choices = document.querySelectorAll('.choice');
+                    choices.forEach((choice, index) => {
+                        choice.innerText = data.choices[index];
+                        choice.classList.remove('correct', 'incorrect');
+                        choice.onclick = checkAnswer;
+                    });
+                    // Добавляем атрибут data-correct с корректным переводом для последующей проверки
+                    document.getElementById('word').setAttribute('data-correct', data.correct_translation);
+                })
+                .catch(error => {
+                    // Повторяем запрос, если остались попытки
+                    if (attempt < maxAttempts) {
+                        attempt++;
+                        console.log(`Retrying... Attempt ${attempt}`);
+                        return fetchWord();
+                    } else {
+                        // Отображаем модальное окно с сообщением об ошибке сети
+                        showModal('Ошибка сети 📡 😔', 'Проверьте соединение с интернетом 📶 🌐 🤳 \nи помните, что отдых очень полезен для запоминания 💤 😘');
+                    }
                 });
-                // Добавляем атрибут data-correct с корректным переводом для последующей проверки
-                document.getElementById('word').setAttribute('data-correct', data.correct_translation);
+        };
+
+        return fetchWord();
+    }
+
+    // Функция для очистки списка использованных слов
+    function clearUsedWords() {
+        fetch('backend/get_word.php?clear_used_words')
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    console.log('Список использованных слов очищен');
+                }
             })
             .catch(error => console.error('Error:', error));
+    }
+
+    function showModal(title, message) {
+        // Создаем элементы модального окна
+        const modal = document.createElement('div');
+        modal.className = 'modal';
+        modal.innerHTML = `
+            <div class="modal-content">
+                <span class="close">&times;</span>
+                <h2>${title}</h2>
+                <p>${message}</p>
+            </div>
+        `;
+
+        // Добавляем модальное окно в DOM
+        document.body.appendChild(modal);
+
+        // Обработчик события для закрытия модального окна
+        const closeButton = modal.querySelector('.close');
+        closeButton.addEventListener('click', () => {
+            document.body.removeChild(modal);
+        });
     }
 
     // Функция для проверки ответа пользователя
@@ -97,6 +161,26 @@ document.addEventListener("DOMContentLoaded", function () {
         document.getElementById('incorrect-answers').innerText = `🚫: ${incorrectAnswers}`;
     }
 
+    // Функция для загрузки списка тем с бд
+    function loadThemes() {
+        fetch('backend/get_word.php?unique_themes')
+            .then(response => response.json())
+            .then(data => {
+                const themeSelect = document.getElementById('theme-select');
+                themeSelect.innerHTML = '<option value="">Все уроки</option>'; // Очищаем текущие опции
+                data.forEach(theme => {
+                    const option = document.createElement('option');
+                    option.value = theme;
+                    option.textContent = theme;
+                    themeSelect.appendChild(option);
+                });
+            })
+            .catch(error => console.error('Error:', error));
+    }
+
+    // Вызываем функцию загрузки списка тем при загрузке страницы
+    loadThemes();
+
     // Загрузка общего количества записей при загрузке страницы
     loadTotalCount();
 
@@ -111,7 +195,17 @@ document.addEventListener("DOMContentLoaded", function () {
         } else {
             updateRecordCount();
         }
+        // Обнуляем счетчики правильных ответов и ошибок
+        correctAnswers = 0;
+        incorrectAnswers = 0;
+
+        // Обновляем отображение счетчиков
+        updateCounters();        
+
+        // Добавляем вызов функции загрузки слов при изменении выбранной темы
+        loadWord(); 
     });
+
 
     // Обработчик события для кнопки инверсии языков
     document.getElementById('invert').addEventListener('click', function () {
@@ -127,37 +221,42 @@ document.addEventListener("DOMContentLoaded", function () {
     updateCounters();
 });
 
-// Функция для добавления эффекта разлетающихся 👍
+// Функция для добавления эффекта разлетающихся эмодзи 👍
 function addFlyingEffect(element) {
-    function random(max) {
-        return Math.random() * (max - 0) + 0;
-    }
-
     const container = document.getElementById('video-container'); // Контейнер, в котором происходит анимация
-    const flyingElement = document.createElement('div');
-    flyingElement.style.position = 'absolute';
-
+    const emoji = getRandomEmoji(); // Получаем случайный эмодзи
     for (let i = 0; i < 30; i++) {
-        const randomSize = Math.random() * (65 - 40) + 40;
-        const styles = `
-            transform: translate3d(${random(500) - 250}px, ${random(300) - 150}px, 50px)
-            rotate(${random(360)}deg) scale(0.5);
-            background: transparent;
-            width: ${randomSize}px;
-            height: ${randomSize}px;
-            animation: bang 1900ms ease-out forwards;
-            opacity: 0;
-        `;
+        
+        const flyingEmoji = document.createElement("div");
+        flyingEmoji.innerText = emoji;
+        flyingEmoji.style.position = 'absolute';
+        flyingEmoji.style.left = `${Math.random() * 100}%`; // Случайное положение по горизонтали
+        flyingEmoji.style.top = `${Math.random() * 100}%`; // Случайное положение по вертикали
+        flyingEmoji.style.fontSize = `${Math.random() * 40 + 20}px`; // Случайный размер шрифта
+        flyingEmoji.style.opacity = 0; // Начальная непрозрачность
+        flyingEmoji.style.transition = 'all 1.9s ease-out'; // Анимация движения и исчезновения
 
-        const heartImage = document.createElement("img");
-        heartImage.setAttribute("src", "img/thumbs-up.ico");
-        heartImage.style.cssText = styles;
-        flyingElement.appendChild(heartImage);
+        // Добавляем элемент в контейнер
+        container.appendChild(flyingEmoji);
+
+        // Задержка перед появлением эмодзи
+        setTimeout(() => {
+            // Устанавливаем случайное смещение
+            flyingEmoji.style.transform = `translate(${Math.random() * 200 - 100}px, ${Math.random() * 200 - 100}px)`;
+            flyingEmoji.style.opacity = 1; // Постепенное появление
+        }, 10);
+
+        // Удаляем элемент после завершения анимации
+        setTimeout(() => {
+            container.removeChild(flyingEmoji);
+        }, 1900);
     }
-
-    container.appendChild(flyingElement);
-
-    setTimeout(() => {
-        container.removeChild(flyingElement);
-    }, 1900);
 }
+
+// Функция для получения случайного эмодзи из массива
+function getRandomEmoji() {
+    var emoji = ['👍', '💪', '🚀', '🎉', '🏆', '🌟', '🎊', '🎈', '✨', '👏', '🙌', '😎', '💰', '💡', '💯', '🔥'];
+
+    return emoji[Math.floor(Math.random() * emoji.length)];
+}
+

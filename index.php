@@ -24,9 +24,7 @@
         <div class="row mt-3">
             <div class="col">
                 <select id="theme-select" class="form-control mb-3">
-                    <option value="">Все уроки</option>
-                    <option value="1 урок">1 урок</option>
-                    <option value="2 урок">2 урок</option>
+                    <!-- Опции будут добавлены динамически с помощью JavaScript -->
                 </select>
             </div>
         </div>

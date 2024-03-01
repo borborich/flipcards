@@ -11,6 +11,9 @@ function write_log($message) {
 // Подключение к базе данных
 require_once(__DIR__ . '/../includes/db_connection.php');
 
+// Начать сеанс PHP
+session_start();
+
 // Функция для выбора случайного слова и вариантов перевода в соответствии с направлением языков и темой
 function getRandomWord($fromLanguage, $toLanguage, $theme) {
     global $conn;
@@ -19,11 +22,15 @@ function getRandomWord($fromLanguage, $toLanguage, $theme) {
     $wordColumn = $fromLanguage . '_word';
     $translationColumn = $toLanguage . '_word';
 
-    // Подготовка запроса с условием выборки слов из указанной темы
+    // Получить список уже использованных слов из сеанса PHP
+    $usedWords = isset($_SESSION['used_words']) ? $_SESSION['used_words'] : array();
+
+    // Подготовка запроса с условием выборки слов из указанной темы и исключением уже использованных слов
     $themeCondition = $theme ? " AND theme = '$theme'" : "";
+    $usedWordsCondition = !empty($usedWords) ? " AND $wordColumn NOT IN ('" . implode("','", $usedWords) . "')" : "";
     
-    // Выбор случайной записи из таблицы с учетом указанной темы
-    $query = "SELECT * FROM italian_words WHERE 1 $themeCondition ORDER BY RAND() LIMIT 1"; // Замените italian_words на имя вашей таблицы
+    // Выбор случайной записи из таблицы с учетом указанной темы и исключением использованных слов
+    $query = "SELECT * FROM italian_words WHERE 1 $themeCondition $usedWordsCondition ORDER BY RAND() LIMIT 1"; // Замените italian_words на имя вашей таблицы
 
     $result = $conn->query($query);
 
@@ -32,6 +39,10 @@ function getRandomWord($fromLanguage, $toLanguage, $theme) {
         $word = $row[$wordColumn];
         $correctTranslation = $row[$translationColumn];
         write_log("Результат первого запроса: $word , $correctTranslation");
+
+        // Добавить использованное слово в список
+        $usedWords[] = $word;
+        $_SESSION['used_words'] = $usedWords;
 
         // Выбор трех случайных вариантов перевода из других записей
         $choices_query = "SELECT * FROM italian_words WHERE $translationColumn != '$correctTranslation' $themeCondition ORDER BY RAND() LIMIT 3";
@@ -54,17 +65,25 @@ function getRandomWord($fromLanguage, $toLanguage, $theme) {
             'choices' => $choices
         );
 
-        // Преобразование массива в строку перед записью в лог
-        $response_str = json_encode($response, JSON_UNESCAPED_UNICODE);
-        write_log("json Массив ответа: $response_str");
-
         return $response;
     } else {
-        $error_message = "No words found";
-        write_log("Error: $error_message");
-        return null;
+        // Если нет слов для выбора, вернуть флаг завершения списка
+        $response = array(
+            'end_of_list' => true
+        );
+        return $response;
     }
 }
+
+// Обработка запроса на очистку списка использованных слов
+if (isset($_GET['clear_used_words'])) {
+    // Очистить список использованных слов
+    $_SESSION['used_words'] = array();
+    // Возвращаем успех
+    echo json_encode(array('success' => true));
+    exit;
+}
+
 
 // Функция для получения количества записей каждой темы и общего количества записей
 function getThemeCounts() {
@@ -97,11 +116,33 @@ function getThemeCount($theme) {
     return $row['count'];
 }
 
+// Функция для получения уникальных тем
+function getUniqueThemes() {
+    global $conn;
+
+    $query = "SELECT DISTINCT theme FROM italian_words"; // Замените italian_words на имя вашей таблицы
+    $result = $conn->query($query);
+
+    $themes = array();
+    while ($row = $result->fetch_assoc()) {
+        $themes[] = $row['theme'];
+    }
+
+    return $themes;
+}
+
+// Обработка запроса о получении списка уникальных тем
+if (isset($_GET['unique_themes'])) {
+    $uniqueThemes = getUniqueThemes();
+    echo json_encode($uniqueThemes);
+    exit; // Важно завершить выполнение скрипта после отправки списка тем
+}
+
 // Функция для получения общего количества записей всех тем
 function getTotalCount() {
     global $conn;
 
-    $query = "SELECT COUNT(*) AS total_count FROM italian_words"; // Замените italian_words на имя вашей таблицы
+    $query = "SELECT COUNT(*) AS total_count FROM italian_words"; 
     $result = $conn->query($query);
     $row = $result->fetch_assoc();
     return $row['total_count'];
