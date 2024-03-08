@@ -32,15 +32,12 @@ document.addEventListener("DOMContentLoaded", function () {
                     // Проверяем, является ли ответ флагом завершения списка
                     if (data.end_of_list) {
                         // Показываем модальное окно об окончании списка слов
-                        showModal('Список слов закончился', 'Вы прошли все доступные слова. Хотите начать заново?', () => {
-                            // Очищаем список использованных слов
-                            clearUsedWords();
-                            // Вызываем функцию загрузки нового слова
-                            loadWord();
-                        });
+                        showModal('🥳🎉 Список слов закончился 🎉🥳', '🌟🚀 Вы прошли все слова из урока. 🌟🚀', 'https://flip.shbb.pro/table.php');
+                        // Очищаем список использованных слов
+                        clearUsedWords();
+
                         return;
                     }
-
 
                     document.getElementById('word').innerText = data.word;
                     const choices = document.querySelectorAll('.choice');
@@ -80,15 +77,16 @@ document.addEventListener("DOMContentLoaded", function () {
             .catch(error => console.error('Error:', error));
     }
 
-    function showModal(title, message) {
+    function showModal(title, message, link) {
         // Создаем элементы модального окна
         const modal = document.createElement('div');
         modal.className = 'modal';
         modal.innerHTML = `
             <div class="modal-content">
                 <span class="close">&times;</span>
-                <h2>${title}</h2>
-                <p>${message}</p>
+                <h2 style="text-align:center;">${title}</h2>
+                <p style="text-align:center;">${message}</p>
+                ${link ? `<a class="btn btn-primary" href="${link}">Перейти к таблицам</a>` : ''}
             </div>
         `;
 
@@ -101,6 +99,7 @@ document.addEventListener("DOMContentLoaded", function () {
             document.body.removeChild(modal);
         });
     }
+
 
     // Функция для проверки ответа пользователя
     function checkAnswer() {
@@ -167,58 +166,113 @@ document.addEventListener("DOMContentLoaded", function () {
             .then(response => response.json())
             .then(data => {
                 const themeSelect = document.getElementById('theme-select');
-                themeSelect.innerHTML = '<option value="">Все уроки</option>'; // Очищаем текущие опции
+                themeSelect.innerHTML = '<option value="">Выберите урок</option>'; // Очищаем текущие опции
                 data.forEach(theme => {
                     const option = document.createElement('option');
                     option.value = theme;
                     option.textContent = theme;
                     themeSelect.appendChild(option);
                 });
+
+                // Проверяем, есть ли параметр theme в URL
+                const urlParams = new URLSearchParams(window.location.search);
+                if (urlParams.has('theme')) {
+                    // Если есть, получаем его значение
+                    const themeParam = urlParams.get('theme');
+                    // Устанавливаем выбранную тему в форме
+                    themeSelect.value = themeParam;
+                    console.log('Загружаем тему из ссылки:', themeParam);
+                    // Выполняем загрузку общего количества записей по выбранной теме
+                    loadThemeCount(themeParam);
+                    loadWord();
+                } else {
+                    console.log('Загружаем тему из выбора в форме');
+                }
             })
             .catch(error => console.error('Error:', error));
     }
 
+
     // Вызываем функцию загрузки списка тем при загрузке страницы
     loadThemes();
 
-    // Загрузка общего количества записей при загрузке страницы
-    loadTotalCount();
-
-    // Загрузка первого слова при загрузке страницы
-    loadWord();
-
-    // Обновление количества записей при изменении выбранной темы
-    document.getElementById('theme-select').addEventListener('change', function () {
-        const selectedTheme = this.value;
-        if (selectedTheme) {
-            loadThemeCount(selectedTheme);
-        } else {
-            updateRecordCount();
-        }
-        // Обнуляем счетчики правильных ответов и ошибок
-        correctAnswers = 0;
-        incorrectAnswers = 0;
-
-        // Обновляем отображение счетчиков
-        updateCounters();        
-
-        // Добавляем вызов функции загрузки слов при изменении выбранной темы
-        loadWord(); 
-    });
-
-
-    // Обработчик события для кнопки инверсии языков
-    document.getElementById('invert').addEventListener('click', function () {
-        const langParam = document.getElementById('word').getAttribute('data-lang');
-        // Меняем значение параметра lang для инверсии языков
-        const newLangParam = langParam === 'invert' ? '' : 'invert';
-        document.getElementById('word').setAttribute('data-lang', newLangParam);
-        // Перезагружаем слово с учетом нового направления языков
+    // Выполняем только на странице index.php
+    if (document.getElementById('record-count')) {
+        // Загрузка общего количества записей при загрузке страницы
+        loadTotalCount();
+        // Загрузка первого слова при загрузке страницы
         loadWord();
-    });
+        // Обновление количества записей при изменении выбранной темы
+        document.getElementById('theme-select').addEventListener('change', function () {
+            const selectedTheme = this.value;
+            if (selectedTheme) {
+                loadThemeCount(selectedTheme);
+            } else {
+                updateRecordCount();
+            }
+            // Обнуляем счетчики правильных ответов и ошибок
+            correctAnswers = 0;
+            incorrectAnswers = 0;
 
-    // Вызов функции обновления счетчиков
-    updateCounters();
+            // Обновляем отображение счетчиков
+            updateCounters();        
+
+            // Добавляем вызов функции загрузки слов при изменении выбранной темы
+            loadWord(); 
+        });
+
+
+        // Обработчик события для кнопки инверсии языков
+        document.getElementById('invert').addEventListener('click', function () {
+            const langParam = document.getElementById('word').getAttribute('data-lang');
+            // Меняем значение параметра lang для инверсии языков
+            const newLangParam = langParam === 'invert' ? '' : 'invert';
+            document.getElementById('word').setAttribute('data-lang', newLangParam);
+            // Перезагружаем слово с учетом нового направления языков
+            loadWord();
+        });
+
+        // Вызов функции обновления счетчиков
+        updateCounters();
+    }
+
+    // Функция для загрузки слов по выбранной теме
+    function loadWordsByTheme(theme) {
+        fetch(`backend/get_words.php?theme=${theme}`)
+            .then(response => response.json())
+            .then(data => {
+                const wordTable = document.getElementById('word-table').querySelector('tbody');
+                wordTable.innerHTML = ''; // Очищаем текущие данные таблицы
+                data.forEach(pair => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td>${pair.russian_word}</td>
+                        <td>${pair.foreign_word}</td>
+                    `;
+                    wordTable.appendChild(row);
+                });
+            })
+            .catch(error => console.error('Error:', error));
+    }
+
+    // Выполняем только на странице table.php
+    if (document.getElementById('theme-select')) {
+
+        // Обработчик события изменения значения в списке выбора темы
+        const themeSelect = document.getElementById('theme-select');
+        themeSelect.addEventListener('change', function(event) {
+            const selectedTheme = themeSelect.value;
+            loadWordsByTheme(selectedTheme);
+
+            // Обновляем ссылки на главную страницу с выбранной темой
+            const cardsLinks = document.querySelectorAll('.cards-link'); // Получаем все ссылки с классом cards-link
+            cardsLinks.forEach(link => {
+                link.href = `cards.php?theme=${selectedTheme}`; // Обновляем значение href для каждой ссылки
+            });
+        });
+    }
+
+
 });
 
 // Функция для добавления эффекта разлетающихся эмодзи 👍
