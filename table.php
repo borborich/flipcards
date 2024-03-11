@@ -8,7 +8,21 @@
     <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
-    <div class="container mt-5">
+
+    <div class="container mt-2">
+        <div class="row">
+            <div class="col text-left">
+                <a href="index.php" class="btn btn-secondary">Главная страница</a>
+            </div>
+            <div class="col text-center">
+                <a href="donate.php" class="btn btn-secondary">👍 Поддержать</a>
+            </div>
+            <div class="col text-right">
+                <a href="cards.php" class="btn btn-secondary">Перейти к карточкам</a>
+            </div>
+        </div>
+    </div>
+    <div class="container mt-2">
         <div class="row">
             <div class="col">
                     <h1>Таблица слов</h1>
@@ -39,15 +53,6 @@
             </div>
         </div>
     </div>
-    <!-- Добавленные ссылки -->
-    <div class="container mt-5">
-        <div class="row">
-            <div class="col">
-                <a href="index.php">На главную</a>
-            </div>
-        </div>
-    </div>
-
 
     <script src="js/script.js"></script>
 </body>

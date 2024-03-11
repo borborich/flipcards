@@ -5,7 +5,7 @@ require_once(__DIR__ . '/../includes/db_connection.php');
 if(isset($_GET['theme'])) {
     $theme = $_GET['theme'];
 
-    $query = "SELECT russian_word, foreign_word FROM italian_words WHERE theme = ?";
+    $query = "SELECT russian_word, foreign_word FROM italian_words WHERE theme = ? ORDER BY id ASC";
     $stmt = $conn->prepare($query);
     $stmt->bind_param("s", $theme);
     $stmt->execute();

@@ -170,3 +170,42 @@ body {
   }
 }
 
+.card-body {
+    text-align: left; /* Выравнивание текста по левому краю */
+    font-size:medium;
+}
+
+.btn-donate {
+    float: right; /* Выравнивание кнопки справа */
+}
+
+.crypto {
+    text-align: center;
+}
+.tooltip {
+  position: relative;
+  display: inline-block;
+  border-bottom: 1px dotted black; /* Пунктирное подчеркивание для слова */
+}
+
+.tooltip .tooltiptext {
+  visibility: hidden;
+  width: 300px;
+  background-color: #f9f9f9;
+  color: #000;
+  text-align: left;
+  border-radius: 6px;
+  padding: 10px;
+  position: absolute;
+  z-index: 1;
+  bottom: 125%;
+  left: 0;
+  margin-left: -60px; /* Расположение подсказки */
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+.tooltip:hover .tooltiptext {
+  visibility: visible;
+  opacity: 1;
+}

@@ -120,7 +120,7 @@ function getThemeCount($theme) {
 function getUniqueThemes() {
     global $conn;
 
-    $query = "SELECT DISTINCT theme FROM italian_words"; // Замените italian_words на имя вашей таблицы
+    $query = "SELECT DISTINCT theme FROM italian_words ORDER BY CAST(theme AS UNSIGNED) ASC"; 
     $result = $conn->query($query);
 
     $themes = array();
