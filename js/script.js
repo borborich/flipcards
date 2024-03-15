@@ -32,7 +32,7 @@ document.addEventListener("DOMContentLoaded", function () {
                     // Проверяем, является ли ответ флагом завершения списка
                     if (data.end_of_list) {
                         // Показываем модальное окно об окончании списка слов
-                        showModal('🥳🎉 Список слов закончился 🎉🥳', '🌟🚀 Вы прошли все слова из урока. 🌟🚀', 'https://flip.shbb.pro/table.php');
+                        showModal('🥳🎉 Список слов закончился 🎉🥳', '🌟🚀 Вы прошли все слова из урока. 🌟🚀', 'https://memo.shbb.pro/table.php');
                         // Очищаем список использованных слов
                         clearUsedWords();
 
