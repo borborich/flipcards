@@ -3,6 +3,21 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Мета-описание -->
+    <meta name="title" content="Заговорить на итальянском">
+    <meta name="description" content="Простое приложение выучивания базовых итальянских слов для легкого вхождения в язык">
+    <!-- Теги -->
+    <meta name="keywords" content="итальянский, слова, учеба, иностранный язык, изучение, Петров, Полиглот">
+    <!-- Изображения -->
+    <meta property="og:image" content="img/favicon.png">
+    <meta property="twitter:image" content="img/favicon.png">
+    <!-- Иконки для установки на устройства -->
+    <!-- iOS -->
+    <link rel="apple-touch-icon" sizes="180x180" href="img/favicon.png">
+    <!-- Android -->
+    <link rel="icon" type="image/png" sizes="192x192" href="img/favicon.png">
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" sizes="32x32" href="img/favicon.png">
     <title>Поблагодарить Шестаковых</title>
     <link href="css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="css/style.css">

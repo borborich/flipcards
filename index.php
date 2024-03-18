@@ -4,6 +4,23 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Добро пожаловать!</title>
+    <!-- Мета-описание -->
+    <meta name="title" content="Заговорить на итальянском">
+    <meta name="description" content="Простое приложение выучивания базовых итальянских слов для легкого вхождения в язык">
+    <!-- Теги -->
+    <meta name="keywords" content="итальянский, слова, учеба, иностранный язык, изучение, Петров, Полиглот">
+    <!-- Изображения -->
+    <meta property="og:image" content="img/favicon.png">
+    <meta property="twitter:image" content="img/favicon.png">
+    <!-- Иконки для установки на устройства -->
+    <!-- iOS -->
+    <link rel="apple-touch-icon" sizes="180x180" href="img/favicon.png">
+    <!-- Android -->
+    <link rel="icon" type="image/png" sizes="192x192" href="img/favicon.png">
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" sizes="32x32" href="img/favicon.png">
+
+    <title>Добро пожаловать!</title>
     <link href="css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="css/style.css">
     <!-- Google tag (gtag.js) -->
@@ -54,7 +71,19 @@
         <p>Пользуйтесь с удовольствием, если нашли 🚫 ошикби или неточности можете ✍️ написать мне <a href="mailto:boris@shbb.pro">boris@shbb.pro</a>, код приложения открыт публично, можно делать pull request на <a href="https://github.com/borborich/flipcards">github</a>, при вашей 🤲 <a href="donate.php">поддержке</a> приложение будет развиваться, будут добавлены другие 🗣️ языки, будет сделан личный кабинет, с возможностью добавлять собственные 📋 списки слов и фраз каждому, 🔊 Аудио произношение слов. Для вашего комфорта на сайте используется cookies google analytics для анализа посещений, продолжая пользоваться сайтом вы с этим соглашаетесь. 🍪</p>
     </div>
 
-
+    <div class="container mt-2">
+        <div class="row">
+            <div class="col text-left">
+                <a href="table.php" class="btn btn-secondary">Перейти к таблицам</a>
+            </div>
+            <div class="col text-center">
+                <a href="donate.php" class="btn btn-secondary">👍 Поддержать</a>
+            </div>            
+            <div class="col text-right">
+                <a href="cards.php" class="btn btn-secondary">Перейти к карточкам</a>
+            </div>
+        </div>
+    </div>
     <script src="js/script.js"></script>
 </body>
 </html>
