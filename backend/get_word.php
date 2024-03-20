@@ -17,6 +17,7 @@ session_start();
 // Функция для выбора случайного слова и вариантов перевода в соответствии с направлением языков и темой
 function getRandomWord($fromLanguage, $toLanguage, $theme) {
     global $conn;
+    write_log("Current language parameters: $fromLanguage -> $toLanguage");
 
     // Определение столбцов для выборки в зависимости от направления языков
     $wordColumn = $fromLanguage . '_word';
@@ -84,27 +85,6 @@ if (isset($_GET['clear_used_words'])) {
     exit;
 }
 
-
-// Функция для получения количества записей каждой темы и общего количества записей
-function getThemeCounts() {
-    global $conn;
-
-    $query = "SELECT theme, COUNT(*) AS count FROM italian_words GROUP BY theme"; // Замените italian_words на имя вашей таблицы
-    $result = $conn->query($query);
-
-    $themeCounts = array();
-    while ($row = $result->fetch_assoc()) {
-        $themeCounts[$row['theme']] = $row['count'];
-    }
-
-    // Добавляем общее количество записей
-    $totalQuery = "SELECT COUNT(*) AS total_count FROM italian_words"; // Замените italian_words на имя вашей таблицы
-    $totalResult = $conn->query($totalQuery);
-    $totalRow = $totalResult->fetch_assoc();
-    $themeCounts['total'] = $totalRow['total_count'];
-
-    return $themeCounts;
-}
 
 // Функция для получения количества записей по выбранной теме
 function getThemeCount($theme) {

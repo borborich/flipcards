@@ -9,9 +9,12 @@ document.addEventListener("DOMContentLoaded", function () {
     function loadWord() {
         console.log('Loading word...'); // Отладочный вывод
         const langParam = document.getElementById('word').getAttribute('data-lang'); // Получаем текущее направление языков
+        console.log('Текущий языковой параметр:', langParam);
         const themeParam = document.getElementById('theme-select').value; // Получаем выбранную тему
         // Формируем URL с учетом выбранной темы
         const url = langParam === 'invert' ? `backend/get_word.php?lang=invert&theme=${themeParam}` : `backend/get_word.php?theme=${themeParam}`;
+        console.log('Request URL:', url);
+
 
         const maxAttempts = 10; // Максимальное количество попыток
         let attempt = 0; // Счетчик попыток
@@ -115,7 +118,7 @@ document.addEventListener("DOMContentLoaded", function () {
             // Добавляем задержку перед вызовом loadWord()
             setTimeout(() => {
                 loadWord();
-            }, 1900); // Таймер на 2 секунды
+            }, 100); // Таймер на 2 секунды
         } else {
             selectedChoice.classList.add('incorrect');
             incorrectAnswers++; // Увеличиваем счетчик ошибочных ответов
@@ -196,7 +199,7 @@ document.addEventListener("DOMContentLoaded", function () {
     // Вызываем функцию загрузки списка тем при загрузке страницы
     loadThemes();
 
-    // Выполняем только на странице index.php
+    // Выполняем только на странице cards.php
     if (document.getElementById('record-count')) {
         // Загрузка общего количества записей при загрузке страницы
         loadTotalCount();
@@ -303,7 +306,7 @@ function addFlyingEffect(element) {
         // Удаляем элемент после завершения анимации
         setTimeout(() => {
             container.removeChild(flyingEmoji);
-        }, 1900);
+        }, 100);
     }
 }
 
