@@ -80,6 +80,8 @@
                 <div id="word" class="card" data-lang="">
                     <!-- Содержимое карточки слова будет добавлено с помощью JavaScript -->
                 </div>
+                <button id="speakWordButton" class="btn btn-primary btn-block">Произнести слово</button>
+
             </div>
         </div>
         <div class="row mt-3">

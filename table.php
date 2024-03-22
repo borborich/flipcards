@@ -52,7 +52,7 @@
                     <h1>Таблица слов</h1>
 
                     <form id="theme-form" class="form-inline mt-4">
-                        <select id="theme-select" class="form-control mr-sm-3">
+                        <select id="theme-select-table" class="form-control mr-sm-3">
                             <!-- Опции будут добавлены динамически с помощью JavaScript -->
                         </select>
                     </form>

@@ -20,8 +20,9 @@ function getRandomWord($fromLanguage, $toLanguage, $theme) {
     write_log("Current language parameters: $fromLanguage -> $toLanguage");
 
     // Определение столбцов для выборки в зависимости от направления языков
-    $wordColumn = $fromLanguage . '_word';
-    $translationColumn = $toLanguage . '_word';
+    $wordColumn = $fromLanguage === "russian" ? "russian_word" : "foreign_word";
+    $translationColumn = $fromLanguage === "russian" ? "foreign_word" : "russian_word";
+
 
     // Получить список уже использованных слов из сеанса PHP
     $usedWords = isset($_SESSION['used_words']) ? $_SESSION['used_words'] : array();
@@ -31,7 +32,8 @@ function getRandomWord($fromLanguage, $toLanguage, $theme) {
     $usedWordsCondition = !empty($usedWords) ? " AND $wordColumn NOT IN ('" . implode("','", $usedWords) . "')" : "";
     
     // Выбор случайной записи из таблицы с учетом указанной темы и исключением использованных слов
-    $query = "SELECT * FROM italian_words WHERE 1 $themeCondition $usedWordsCondition ORDER BY RAND() LIMIT 1"; // Замените italian_words на имя вашей таблицы
+    $query = "SELECT * FROM italian_words WHERE 1 $themeCondition $usedWordsCondition ORDER BY RAND() LIMIT 1"; 
+    write_log("Word Query: $query"); 
 
     $result = $conn->query($query);
 
@@ -47,13 +49,18 @@ function getRandomWord($fromLanguage, $toLanguage, $theme) {
 
         // Выбор трех случайных вариантов перевода из других записей
         $choices_query = "SELECT * FROM italian_words WHERE $translationColumn != '$correctTranslation' $themeCondition ORDER BY RAND() LIMIT 3";
+        write_log("Choices Query: $choices_query");
 
         $choices_result = $conn->query($choices_query);
+        //write_log("Choices result: $choices_result");
 
         $choices = array();
         while ($row = $choices_result->fetch_assoc()) {
             $choices[] = $row[$translationColumn];
         }
+        // Формирование строки из массива вариантов ответов для вывода в логи
+        $choicesString = implode(", ", $choices);
+        write_log("Choices result: $choicesString");
 
         // Добавление верного варианта перевода к остальным вариантам и перемешивание
         $choices[] = $correctTranslation;

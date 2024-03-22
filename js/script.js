@@ -5,6 +5,21 @@ document.addEventListener("DOMContentLoaded", function () {
     let correctAnswers = 0; // Количество правильных ответов
     let incorrectAnswers = 0; // Количество ошибочных ответов
 
+    // Функция для произношения текста с помощью SpeechSynthesis API
+    function speakText(text) {
+        var synth = window.speechSynthesis;
+        var utterance = new SpeechSynthesisUtterance(text);
+        synth.speak(utterance);
+    }
+
+    // Добавляем обработчик события для кнопки произношения слова
+    document.getElementById('speakWordButton').addEventListener('click', function() {
+        // Получаем текущее слово
+        var currentWord = document.getElementById('word').innerText;
+        // Произносим текущее слово
+        speakText(currentWord);
+    });
+
     // Функция для загрузки нового слова и вариантов перевода
     function loadWord() {
         console.log('Loading word...'); // Отладочный вывод
@@ -168,7 +183,7 @@ document.addEventListener("DOMContentLoaded", function () {
         fetch('backend/get_word.php?unique_themes')
             .then(response => response.json())
             .then(data => {
-                const themeSelect = document.getElementById('theme-select');
+                const themeSelect = document.getElementById('theme-select') || document.getElementById('theme-select-table');
                 themeSelect.innerHTML = '<option value="">Выберите урок</option>'; // Очищаем текущие опции
                 data.forEach(theme => {
                     const option = document.createElement('option');
@@ -231,6 +246,11 @@ document.addEventListener("DOMContentLoaded", function () {
             // Меняем значение параметра lang для инверсии языков
             const newLangParam = langParam === 'invert' ? '' : 'invert';
             document.getElementById('word').setAttribute('data-lang', newLangParam);
+            // Обнуляем счетчики правильных ответов и ошибок
+            correctAnswers = 0;
+            incorrectAnswers = 0;
+            // Вызов функции обновления счетчиков
+            updateCounters();
             // Перезагружаем слово с учетом нового направления языков
             loadWord();
         });
@@ -259,10 +279,10 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     // Выполняем только на странице table.php
-    if (document.getElementById('theme-select')) {
+    if (document.getElementById('theme-select-table')) {
 
         // Обработчик события изменения значения в списке выбора темы
-        const themeSelect = document.getElementById('theme-select');
+        const themeSelect = document.getElementById('theme-select-table');
         themeSelect.addEventListener('change', function(event) {
             const selectedTheme = themeSelect.value;
             loadWordsByTheme(selectedTheme);
