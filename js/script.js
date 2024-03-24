@@ -5,83 +5,118 @@ document.addEventListener("DOMContentLoaded", function () {
     let correctAnswers = 0; // Количество правильных ответов
     let incorrectAnswers = 0; // Количество ошибочных ответов
 
-    // Функция для произношения текста с помощью SpeechSynthesis API
-    function speakText(text) {
-        var synth = window.speechSynthesis;
-        var utterance = new SpeechSynthesisUtterance(text);
-        synth.speak(utterance);
+// Функция для заполнения списка доступных языков
+function populateLanguageList() {
+    var selectLanguage = document.getElementById('selectLanguage');
+    // Очищаем список перед добавлением новых языков
+    selectLanguage.innerHTML = '';
+    // Добавляем каждый доступный язык в список
+    var voices = window.speechSynthesis.getVoices();
+    if (voices.length > 0) {
+        voices.forEach(function(voice) {
+            var option = document.createElement('option');
+            option.textContent = voice.name + ' (' + voice.lang + ')';
+            // Добавляем метку -- DEFAULT, если голос является голосом по умолчанию
+            if (voice.default) {
+                option.textContent += ' -- DEFAULT';
+            }
+            option.setAttribute('value', voice.lang);
+            selectLanguage.appendChild(option);
+        });
+    } else {
+        // Если список голосов пуст, попробуйте загрузить его снова через некоторое время
+        setTimeout(populateLanguageList, 1000);
     }
+}
 
-    // Добавляем обработчик события для кнопки произношения слова
-    document.getElementById('speakWordButton').addEventListener('click', function() {
-        // Получаем текущее слово
-        var currentWord = document.getElementById('word').innerText;
-        // Произносим текущее слово
-        speakText(currentWord);
-    });
+// Вызываем функцию для заполнения списка языков при загрузке страницы
+//populateLanguageList();
 
-    // Функция для загрузки нового слова и вариантов перевода
-    function loadWord() {
-        console.log('Loading word...'); // Отладочный вывод
-        const langParam = document.getElementById('word').getAttribute('data-lang'); // Получаем текущее направление языков
-        console.log('Текущий языковой параметр:', langParam);
-        const themeParam = document.getElementById('theme-select').value; // Получаем выбранную тему
-        // Формируем URL с учетом выбранной темы
-        const url = langParam === 'invert' ? `backend/get_word.php?lang=invert&theme=${themeParam}` : `backend/get_word.php?theme=${themeParam}`;
-        console.log('Request URL:', url);
+// Добавляем обработчик события для кнопки произношения слова
+document.getElementById('speakWordButton').addEventListener('click', function() {
+    var currentWord = document.getElementById('word').innerText;
+    var selectedLanguage = document.getElementById('word').getAttribute('lang'); // Получаем выбранный язык из атрибута data-lang
+    // Произносим текущее слово с выбранным языком
+    speakText(currentWord, selectedLanguage);
+});
+
+// Функция для произношения текста с помощью SpeechSynthesis API
+function speakText(text, lang) {
+    var synth = window.speechSynthesis;
+    var utterance = new SpeechSynthesisUtterance(text);
+    // Устанавливаем язык для произношения
+    utterance.lang = lang;
+    synth.speak(utterance);
+}
 
 
-        const maxAttempts = 10; // Максимальное количество попыток
-        let attempt = 0; // Счетчик попыток
+function loadWord() {
+    console.log('Loading word...'); // Отладочный вывод
+    const langParam = document.getElementById('word').getAttribute('data-lang'); // Получаем текущее направление языков
+    console.log('Текущий языковой параметр:', langParam);
+    const themeParam = document.getElementById('theme-select').value; // Получаем выбранную тему
+    // Формируем URL с учетом выбранной темы
+    const url = langParam === 'invert' ? `backend/get_word.php?lang=invert&theme=${themeParam}` : `backend/get_word.php?theme=${themeParam}`;
+    console.log('Request URL:', url);
 
-        const fetchWord = () => {
-            return fetch(url)
-                .then(response => {
-                    console.log('Response received:', response); // Отладочный вывод
-                    if (!response.ok) {
-                        throw new Error('Network response was not ok');
-                    }
-                    return response.json(); // Возврат Promise объекта для обработки далее
-                })
-                .then(data => {
-                    if (!data) {
-                        throw new Error('Empty response data');
-                    }
-                    // Проверяем, является ли ответ флагом завершения списка
-                    if (data.end_of_list) {
-                        // Показываем модальное окно об окончании списка слов
-                        showModal('🥳🎉 Список слов закончился 🎉🥳', '🌟🚀 Вы прошли все слова из урока. 🌟🚀', 'https://memo.shbb.pro/table.php');
-                        // Очищаем список использованных слов
-                        clearUsedWords();
+    const maxAttempts = 10; // Максимальное количество попыток
+    let attempt = 0; // Счетчик попыток
 
-                        return;
-                    }
+    const fetchWord = () => {
+        return fetch(url)
+            .then(response => {
+                console.log('Response received:', response); // Отладочный вывод
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json(); // Возврат Promise объекта для обработки далее
+            })
+            .then(data => {
+                if (!data) {
+                    throw new Error('Empty response data');
+                }
+                // Проверяем, является ли ответ флагом завершения списка
+                if (data.end_of_list) {
+                    // Показываем модальное окно об окончании списка слов
+                    showModal('🥳🎉 Список слов закончился 🎉🥳', '🌟🚀 Вы прошли все слова из урока. 🌟🚀', 'https://memo.shbb.pro/table.php');
+                    // Очищаем список использованных слов
+                    clearUsedWords();
+                    return;
+                }
 
-                    document.getElementById('word').innerText = data.word;
-                    const choices = document.querySelectorAll('.choice');
-                    choices.forEach((choice, index) => {
-                        choice.innerText = data.choices[index];
-                        choice.classList.remove('correct', 'incorrect');
-                        choice.onclick = checkAnswer;
-                    });
-                    // Добавляем атрибут data-correct с корректным переводом для последующей проверки
-                    document.getElementById('word').setAttribute('data-correct', data.correct_translation);
-                })
-                .catch(error => {
-                    // Повторяем запрос, если остались попытки
-                    if (attempt < maxAttempts) {
-                        attempt++;
-                        console.log(`Retrying... Attempt ${attempt}`);
-                        return fetchWord();
-                    } else {
-                        // Отображаем модальное окно с сообщением об ошибке сети
-                        showModal('Ошибка сети 📡 😔', 'Проверьте соединение с интернетом 📶 🌐 🤳 \nи помните, что отдых очень полезен для запоминания 💤 😘');
-                    }
+                // Установка параметров языка для слова и вариантов выбора
+                document.getElementById('word').setAttribute('lang', data.word_lang);
+                const choices = document.querySelectorAll('.choice');
+                choices.forEach((choice, index) => {
+                    choice.innerText = data.choices[index];
+                    choice.classList.remove('correct', 'incorrect');
+                    choice.onclick = checkAnswer;
+                    choice.setAttribute('lang', data.choices_lang);
                 });
-        };
+                // Добавляем атрибут data-correct с корректным переводом для последующей проверки
+                document.getElementById('word').setAttribute('data-correct', data.correct_translation);
 
-        return fetchWord();
-    }
+                // Вставка слова и вариантов выбора в соответствующие элементы DOM
+                document.getElementById('word').innerText = data.word;
+                const choicesString = data.choices.join(", ");
+                console.log("Choices result:", choicesString);
+            })
+            .catch(error => {
+                // Повторяем запрос, если остались попытки
+                if (attempt < maxAttempts) {
+                    attempt++;
+                    console.log(`Retrying... Attempt ${attempt}`);
+                    return fetchWord();
+                } else {
+                    // Отображаем модальное окно с сообщением об ошибке сети
+                    showModal('Ошибка сети 📡 😔', 'Проверьте соединение с интернетом 📶 🌐 🤳 \nи помните, что отдых очень полезен для запоминания 💤 😘');
+                }
+            });
+    };
+
+    return fetchWord();
+}
+
 
     // Функция для очистки списка использованных слов
     function clearUsedWords() {
@@ -251,8 +286,10 @@ document.addEventListener("DOMContentLoaded", function () {
             incorrectAnswers = 0;
             // Вызов функции обновления счетчиков
             updateCounters();
+            clearUsedWords();
             // Перезагружаем слово с учетом нового направления языков
             loadWord();
+
         });
 
         // Вызов функции обновления счетчиков

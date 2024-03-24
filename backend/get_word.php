@@ -23,7 +23,6 @@ function getRandomWord($fromLanguage, $toLanguage, $theme) {
     $wordColumn = $fromLanguage === "russian" ? "russian_word" : "foreign_word";
     $translationColumn = $fromLanguage === "russian" ? "foreign_word" : "russian_word";
 
-
     // Получить список уже использованных слов из сеанса PHP
     $usedWords = isset($_SESSION['used_words']) ? $_SESSION['used_words'] : array();
 
@@ -41,7 +40,8 @@ function getRandomWord($fromLanguage, $toLanguage, $theme) {
         $row = $result->fetch_assoc();
         $word = $row[$wordColumn];
         $correctTranslation = $row[$translationColumn];
-        write_log("Результат первого запроса: $word , $correctTranslation");
+        $wordLang = $fromLanguage === "russian" ? "ru-RU" : $row['language_code'];
+        $translationLang = $fromLanguage === "russian" ? $row['language_code'] : "ru-RU";
 
         // Добавить использованное слово в список
         $usedWords[] = $word;
@@ -52,7 +52,6 @@ function getRandomWord($fromLanguage, $toLanguage, $theme) {
         write_log("Choices Query: $choices_query");
 
         $choices_result = $conn->query($choices_query);
-        //write_log("Choices result: $choices_result");
 
         $choices = array();
         while ($row = $choices_result->fetch_assoc()) {
@@ -66,10 +65,12 @@ function getRandomWord($fromLanguage, $toLanguage, $theme) {
         $choices[] = $correctTranslation;
         shuffle($choices);
 
-        // Формирование массива данных для ответа, включая корректный перевод
+        // Формирование массива данных для ответа, включая корректный перевод и коды языков
         $response = array(
             'word' => $word,
-            'correct_translation' => $correctTranslation, // Добавление корректного перевода
+            'word_lang' => $wordLang,
+            'correct_translation' => $correctTranslation,
+            'choices_lang' => $translationLang,
             'choices' => $choices
         );
 
@@ -82,6 +83,7 @@ function getRandomWord($fromLanguage, $toLanguage, $theme) {
         return $response;
     }
 }
+
 
 // Обработка запроса на очистку списка использованных слов
 if (isset($_GET['clear_used_words'])) {

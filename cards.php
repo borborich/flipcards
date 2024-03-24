@@ -35,13 +35,13 @@
     <div class="container mt-2">
         <div class="row">
             <div class="col text-left">
-                <a href="index.php" class="btn btn-secondary">Главная страница</a>
+                <a href="index.php" class="btn btn-secondary">🏠 Главная</a>
             </div>
             <div class="col text-center">
                 <a href="donate.php" class="btn btn-secondary">👍 Поддержать</a>
             </div>
             <div class="col text-right">
-                <a href="table.php" class="btn btn-secondary">Перейти к таблицам</a>
+                <a href="table.php" class="btn btn-secondary">📚Таблицы</a>
             </div>
         </div>
     </div>
@@ -74,36 +74,43 @@
                 </div>
             </div>
         </div>
+
+
         <div class="row mt-3">
             <div class="col">
                 <div id="video-container"></div>
-                <div id="word" class="card" data-lang="">
-                    <!-- Содержимое карточки слова будет добавлено с помощью JavaScript -->
-                </div>
-                <button id="speakWordButton" class="btn btn-primary btn-block">Произнести слово</button>
-
+                    <div class="card d-flex flex-row justify-content-center align-items-center" data-lang="" lang="">
+                        <span id="word" class="mr-2"><!-- слово --></span>
+                        <button id="speakWordButton" type="button" class="btn btn-primary" aria-label="Play Sound">
+                            🔊
+                        </button>                  
+                    </div>   
             </div>
         </div>
+
+
+
+
         <div class="row mt-3">
             <div class="col">
                 <div class="row mt-2">
                     <div class="col">
-                        <div class="choice"></div>
+                        <div class="choice" lang=""></div>
                     </div>
                 </div>
                 <div class="row mt-2">
                     <div class="col">
-                        <div class="choice"></div>
+                        <div class="choice" lang=""></div>
                     </div>
                 </div>
                 <div class="row mt-2">
                     <div class="col">
-                        <div class="choice"></div>
+                        <div class="choice" lang=""></div>
                     </div>
                 </div>
                 <div class="row mt-2">
                     <div class="col">
-                        <div class="choice"></div>
+                        <div class="choice" lang=""></div>
                     </div>
                 </div>
             </div>
@@ -111,6 +118,6 @@
     </div>
 
 
-    <script src="js/script.js"></script>
+    <script defer type="module" src="js/script.js"></script>
 </body>
 </html>
