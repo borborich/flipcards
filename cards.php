@@ -81,7 +81,7 @@
                 <div id="video-container"></div>
                     <div class="card d-flex flex-row justify-content-center align-items-center" data-lang="" lang="">
                         <span id="word" class="mr-2"><!-- слово --></span>
-                        <button id="speakWordButton" type="button" class="btn btn-primary" aria-label="Play Sound">
+                        <button id="speakWordButton" type="button" class="btn btn-light" aria-label="Play Sound">
                             🔊
                         </button>                  
                     </div>   
@@ -94,23 +94,35 @@
         <div class="row mt-3">
             <div class="col">
                 <div class="row mt-2">
-                    <div class="col">
-                        <div class="choice" lang=""></div>
+                    <div class="col d-flex">
+                        <div class="choice" lang="">
+                            <!-- вариант ответа подставляется в js -->
+                        </div>
+                        <button class="btn btn-sm btn-success speakButton ml-2">🔊</button>
                     </div>
                 </div>
                 <div class="row mt-2">
-                    <div class="col">
-                        <div class="choice" lang=""></div>
+                    <div class="col d-flex">
+                        <div class="choice" lang="">
+                            <!-- вариант ответа подставляется в js -->
+                        </div>
+                        <button class="btn btn-sm btn-success speakButton ml-2">🔊</button>
                     </div>
                 </div>
                 <div class="row mt-2">
-                    <div class="col">
-                        <div class="choice" lang=""></div>
+                    <div class="col d-flex">
+                        <div class="choice" lang="">
+                            <!-- вариант ответа подставляется в js -->
+                        </div>
+                        <button class="btn btn-sm btn-success speakButton ml-2">🔊</button>
                     </div>
                 </div>
                 <div class="row mt-2">
-                    <div class="col">
-                        <div class="choice" lang=""></div>
+                    <div class="col d-flex">
+                        <div class="choice" lang="">
+                            <!-- вариант ответа подставляется в js -->
+                        </div>
+                        <button class="btn btn-sm btn-success speakButton ml-2">🔊</button>
                     </div>
                 </div>
             </div>

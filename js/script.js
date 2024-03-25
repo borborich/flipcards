@@ -32,13 +32,6 @@ function populateLanguageList() {
 // Вызываем функцию для заполнения списка языков при загрузке страницы
 //populateLanguageList();
 
-// Добавляем обработчик события для кнопки произношения слова
-document.getElementById('speakWordButton').addEventListener('click', function() {
-    var currentWord = document.getElementById('word').innerText;
-    var selectedLanguage = document.getElementById('word').getAttribute('lang'); // Получаем выбранный язык из атрибута data-lang
-    // Произносим текущее слово с выбранным языком
-    speakText(currentWord, selectedLanguage);
-});
 
 // Функция для произношения текста с помощью SpeechSynthesis API
 function speakText(text, lang) {
@@ -251,6 +244,28 @@ function loadWord() {
 
     // Выполняем только на странице cards.php
     if (document.getElementById('record-count')) {
+
+        // Добавляем обработчик события для кнопки произношения слова
+        document.getElementById('speakWordButton').addEventListener('click', function() {
+            var currentWord = document.getElementById('word').innerText;
+            var selectedLanguage = document.getElementById('word').getAttribute('lang'); // Получаем выбранный язык из атрибута lang
+            // Произносим текущее слово с выбранным языком
+            speakText(currentWord, selectedLanguage);
+        });
+
+        // Получаем все кнопки озвучки вариантов ответов
+        var speakButtons = document.querySelectorAll('.speakButton');
+
+        // Добавляем обработчик события для каждой кнопки озвучки варианта ответа
+        speakButtons.forEach(function(button) {
+            button.addEventListener('click', function() {
+                var answerText = this.previousElementSibling.innerText; // Получаем текст ответа, предшествующего кнопке
+                var selectedLanguage = this.previousElementSibling.getAttribute('lang'); // Получаем выбранный язык из атрибута lang
+                // Произносим текст ответа с выбранным языком
+                speakText(answerText, selectedLanguage);
+            });
+        });
+
         // Загрузка общего количества записей при загрузке страницы
         loadTotalCount();
         // Загрузка первого слова при загрузке страницы
@@ -305,10 +320,33 @@ function loadWord() {
                 wordTable.innerHTML = ''; // Очищаем текущие данные таблицы
                 data.forEach(pair => {
                     const row = document.createElement('tr');
-                    row.innerHTML = `
-                        <td>${pair.russian_word}</td>
-                        <td>${pair.foreign_word}</td>
-                    `;
+                    const russianWordCell = document.createElement('td');
+                    const foreignWordCell = document.createElement('td');
+
+                    // Добавляем текст в соответствующие ячейки
+                    russianWordCell.textContent = pair.russian_word;
+                    foreignWordCell.textContent = pair.foreign_word;
+
+                    // Добавляем атрибуты lang для слов
+                    foreignWordCell.setAttribute('lang', pair.foreign_word_lang);
+                    russianWordCell.setAttribute('lang', "ru-RU")
+
+                    // Добавляем класс для стилизации
+                    foreignWordCell.classList.add('table-word');
+                    russianWordCell.classList.add('table-word');
+
+                    // Добавляем обработчик события клика для иностранного слова
+                    foreignWordCell.addEventListener('click', function() {
+                        speakText(pair.foreign_word, pair.foreign_word_lang);
+                    });
+
+                    russianWordCell.addEventListener('click', function() {
+                        speakText(pair.russian_word, "ru-RU");
+                    });
+
+                    // Добавляем ячейки в строку и строку в таблицу
+                    row.appendChild(russianWordCell);
+                    row.appendChild(foreignWordCell);
                     wordTable.appendChild(row);
                 });
             })

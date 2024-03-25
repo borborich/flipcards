@@ -80,6 +80,7 @@ body {
     border-radius: 5px;
     cursor: pointer;
     text-align: center;
+    width: -webkit-fill-available;
 }
 
 .choice:hover {
@@ -209,3 +210,14 @@ body {
   visibility: visible;
   opacity: 1;
 }
+
+.table-word {
+    text-decoration: underline;
+    text-decoration-color: #bfbfff;
+    text-decoration-style: dashed;
+    cursor: pointer; 
+    text-underline-offset: 0.2em; 
+}
+
+}
+

@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Хост: localhost:3306
--- Время создания: Мар 24 2024 г., 08:37
+-- Время создания: Мар 25 2024 г., 14:55
 -- Версия сервера: 10.3.38-MariaDB-log-cll-lve
 -- Версия PHP: 8.1.16
 
@@ -1667,7 +1667,7 @@ INSERT INTO `italian_words` (`id`, `russian_word`, `foreign_word`, `theme`, `lan
 (4021, 'Ужасы', 'Orrore', '14 урок', 'it-IT'),
 (4022, 'Дедушка уже поел', 'Nonno gia ha mangiato', '14 урок', 'it-IT'),
 (4023, '107 лет', 'Cento sette anni', '14 урок', 'it-IT'),
-(4024, 'Я просыпается в 4 часа', 'Io mi sveglio alle quattro', '14 урок', 'it-IT'),
+(4024, 'Я просыпаюсь в 4 часа', 'Io mi sveglio alle quattro', '14 урок', 'it-IT'),
 (4025, 'Я тебя вижу каждый день', 'Io ti vedo ogni giorno', '14 урок', 'it-IT'),
 (4026, 'Я тебя слышу очень хорошо, но не понимаю', 'Io ti sento molto bene ma non capisco', '14 урок', 'it-IT'),
 (4027, 'Я поеду учиться в Лондон', 'Io vado studiare a Londra', '14 урок', 'it-IT'),

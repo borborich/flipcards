@@ -36,13 +36,13 @@
     <div class="container mt-2">
         <div class="row">
             <div class="col text-left">
-                <a href="index.php" class="btn btn-secondary">Главная страница</a>
+                <a href="index.php" class="btn btn-secondary">🏠 Главная</a>
             </div>
             <div class="col text-center">
                 <a href="donate.php" class="btn btn-secondary">👍 Поддержать</a>
             </div>
             <div class="col text-right">
-                <a href="cards.php" class="btn btn-secondary">Перейти к карточкам</a>
+                <a href="cards.php" class="btn btn-secondary">🗂️ Карточки</a>
             </div>
         </div>
     </div>
@@ -59,6 +59,8 @@
                     
 
                     <a class="btn btn-primary mt-4 cards-link" href="#">Перейти к карточкам этого урока</a>
+                    <br><br>
+                    <p>Нажатие на любое слово озвучит его произношение 🔊</p>
 
                     <div id="word-table" class="mt-4 table-responsive">
                         <table class="table table-striped">
