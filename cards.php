@@ -20,7 +20,7 @@
     <link rel="icon" type="image/png" sizes="32x32" href="img/favicon.png">
     <title>Изучение иностранных слов</title>
     <link href="css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/style.css?version=2">
     <!-- Google tag (gtag.js) -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-T24M5R7GHF"></script>
     <script>
@@ -41,7 +41,7 @@
                 <a href="donate.php" class="btn btn-secondary">👍 Поддержать</a>
             </div>
             <div class="col text-right">
-                <a href="table.php" class="btn btn-secondary">📚Таблицы</a>
+                <a href="table.php" class="btn btn-secondary">📚 Таблицы</a>
             </div>
         </div>
     </div>
@@ -130,6 +130,6 @@
     </div>
 
 
-    <script defer type="module" src="js/script.js"></script>
+    <script defer type="module" src="js/script.js?version=2.1"></script>
 </body>
 </html>

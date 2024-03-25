@@ -20,7 +20,7 @@
     <link rel="icon" type="image/png" sizes="32x32" href="img/favicon.png">
     <title>Таблица слов</title>
     <link href="css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/style.css?version=2">
     <!-- Google tag (gtag.js) -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-T24M5R7GHF"></script>
     <script>
@@ -58,16 +58,18 @@
                     </form>
                     
 
-                    <a class="btn btn-primary mt-4 cards-link" href="#">Перейти к карточкам этого урока</a>
-                    <br><br>
-                    <p>Нажатие на любое слово озвучит его произношение 🔊</p>
+                    <div id="below-form-content"> <!-- Контейнер для элементов, которые нужно скрыть -->
+                        <a class="btn btn-primary mt-4 cards-link" href="#">Перейти к карточкам этого урока</a>
+                        <br><br>
+                        <p>Нажатие на любое слово озвучит его произношение 🔊</p>
+                    </div>
 
                     <div id="word-table" class="mt-4 table-responsive">
                         <table class="table table-striped">
                             <thead>
                                 <tr>
-                                    <th scope="col">Русское слово</th>
-                                    <th scope="col">Итальянское слово</th>
+                                    <th scope="col">Русский</th>
+                                    <th scope="col">Итальянский</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -80,6 +82,6 @@
         </div>
     </div>
 
-    <script src="js/script.js"></script>
+    <script src="js/script.js?version=2"></script>
 </body>
 </html>

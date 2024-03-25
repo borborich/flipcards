@@ -20,7 +20,7 @@
     <link rel="icon" type="image/png" sizes="32x32" href="img/favicon.png">
     <title>Поблагодарить Шестаковых</title>
     <link href="css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/style.css?version=2">
     <!-- Google tag (gtag.js) -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-T24M5R7GHF"></script>
     <script>
@@ -36,13 +36,13 @@
     <div class="container mt-2">
         <div class="row">
             <div class="col text-left">
-                <a href="index.php" class="btn btn-secondary">Главная страница</a>
+                <a href="index.php" class="btn btn-secondary">🏠 Главная</a>
             </div>
             <div class="col text-center">
-                <a href="table.php" class="btn btn-secondary">Перейти к таблицам</a>
+                <a href="table.php" class="btn btn-secondary">📚 Таблицы</a>
             </div>
             <div class="col text-right">
-                <a href="cards.php" class="btn btn-secondary">Перейти к карточкам</a>
+                <a href="cards.php" class="btn btn-secondary">🗂️ Карточки</a>
             </div>
         </div>
     </div>
@@ -58,7 +58,7 @@
                        <ul>
                            <li>📚 Добавить другие языки для изучения</li>
                            <li>🪪 Сделать персональные аккаунты с возможностью создавать свои таблицы</li>
-                           <li>🔊 Аудио произношение слов 🗣️</li>
+                           <li>🔊 Аудио произношение слов 🗣️ (✅ реализовано)</li>
                            <li>🔥 Ваши варианты от 200€ 😉</li>
                        </ul>
                        <br>

@@ -219,5 +219,10 @@ body {
     text-underline-offset: 0.2em; 
 }
 
+#below-form-content,
+#word-table,
+.cards-link {
+    display: none; 
 }
+
 

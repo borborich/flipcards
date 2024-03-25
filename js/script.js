@@ -72,8 +72,20 @@ function loadWord() {
                 if (data.end_of_list) {
                     // Показываем модальное окно об окончании списка слов
                     showModal('🥳🎉 Список слов закончился 🎉🥳', '🌟🚀 Вы прошли все слова из урока. 🌟🚀', 'https://memo.shbb.pro/table.php');
+                    
                     // Очищаем список использованных слов
                     clearUsedWords();
+
+                    // загружаем новое слово
+                    loadWord();
+
+                    // Обнуляем счетчики правильных ответов и ошибок
+                    correctAnswers = 0;
+                    incorrectAnswers = 0;
+
+                    // Обновляем отображение счетчиков
+                    updateCounters(); 
+
                     return;
                 }
 
@@ -161,7 +173,7 @@ function loadWord() {
             // Добавляем задержку перед вызовом loadWord()
             setTimeout(() => {
                 loadWord();
-            }, 100); // Таймер на 2 секунды
+            }, 1900); // Таймер на 2 секунды
         } else {
             selectedChoice.classList.add('incorrect');
             incorrectAnswers++; // Увеличиваем счетчик ошибочных ответов
@@ -367,6 +379,11 @@ function loadWord() {
             cardsLinks.forEach(link => {
                 link.href = `cards.php?theme=${selectedTheme}`; // Обновляем значение href для каждой ссылки
             });
+
+            // Показываем скрытые элементы после выбора темы
+            document.querySelectorAll('#below-form-content, #word-table, .cards-link').forEach(element => {
+                element.style.display = 'block';
+            });            
         });
     }
 
@@ -401,7 +418,7 @@ function addFlyingEffect(element) {
         // Удаляем элемент после завершения анимации
         setTimeout(() => {
             container.removeChild(flyingEmoji);
-        }, 100);
+        }, 1900);
     }
 }
 
