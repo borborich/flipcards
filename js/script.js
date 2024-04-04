@@ -67,11 +67,11 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
     // Функция для произношения текста с указанными настройками
-    function speakText(text, voice, speed = 1, pitch = 1) {
+    function speakText(text, speed = 1, pitch = 1) {
         var synth = window.speechSynthesis;
         var utterance = new SpeechSynthesisUtterance(text);
-        utterance.lang = 'it-IT'
-        utterance.voice = voice;
+        //utterance.lang = 'it-IT'
+        //utterance.voice = voice;
 
         // Устанавливаем скорость и высоту произношения
         utterance.rate = speed;
