@@ -24,9 +24,9 @@
             <div class="col">
                 <h3>Введите текст для произнесения</h3>
                 <textarea id="textInput" class="form-control mb-3" rows="3"></textarea>
-                <label for="speedRange">Скорость произношения:</label>
+                <label for="speedRange">Скорость произношения: <span id="speedValue">1</span></label>
                 <input type="range" id="speedRange" min="0.1" max="2" step="0.1" value="1" class="form-control mb-3">
-                <label for="pitchRange">Высота произношения:</label>
+                <label for="pitchRange">Высота произношения: <span id="pitchValue">1</span></label>
                 <input type="range" id="pitchRange" min="0.1" max="2" step="0.1" value="1" class="form-control mb-3">
                 <button id="speakTextButton" class="btn btn-primary">Произнести текст</button>
             </div>

@@ -29,8 +29,7 @@ document.addEventListener("DOMContentLoaded", function () {
     // Проверяем, находимся ли мы на странице settings.php
     if (document.location.pathname === "/settings.php") {
         // Если да, вызываем функцию для заполнения списка голосов
-        setTimeout(populateVoiceList, 600); // Задержка 500 миллисекунд (или другое подходящее значение)
-
+        setTimeout(populateVoiceList, 600); // Задержка 600 миллисекунд (или другое подходящее значение)
 
         // Обработчик события для кнопки "Произнести текст"
         document.getElementById("speakTextButton").addEventListener("click", function () {
@@ -63,16 +62,15 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     }
 
-
-
-
     // Функция для произношения текста с указанными настройками
-    function speakText(text, speed = 1, pitch = 1) {
+    function speakText(text, selectedVoiceId, speed = 1, pitch = 1) {
         var synth = window.speechSynthesis;
+        var voices = synth.getVoices();
+        var selectedVoice = voices.find(function(voice) {
+            return voice.name === selectedVoiceId;
+        });
         var utterance = new SpeechSynthesisUtterance(text);
-        //utterance.lang = 'it-IT'
-        //utterance.voice = voice;
-
+        utterance.voice = selectedVoice;
         // Устанавливаем скорость и высоту произношения
         utterance.rate = speed;
         utterance.pitch = pitch;
