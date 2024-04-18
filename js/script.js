@@ -17,8 +17,8 @@ document.addEventListener("DOMContentLoaded", function () {
         // Если есть сохраненный голос, добавляем его в начало списка
         if (savedVoice) {
             var savedOption = document.createElement('option');
-            savedOption.textContent = savedVoice + ' (сохраненный)';
-            savedOption.setAttribute('data-voice-id', savedVoice);
+            savedOption.textContent = savedVoice.voiceId + ' (сохраненный)';
+            savedOption.setAttribute('data-voice-id', savedVoice.voiceId);
             selectVoice.appendChild(savedOption);
         }
 
@@ -35,6 +35,7 @@ document.addEventListener("DOMContentLoaded", function () {
                         option.textContent = voice.name + ' (' + voice.lang + ')';
                         // Сохраняем идентификатор голоса в data-voice-id
                         option.setAttribute('data-voice-id', voice.name);
+                        option.setAttribute('voice-lang', voice.lang);
                         selectVoice.appendChild(option);
                     }
                     italianVoicesFound = true; // Устанавливаем флаг в true, если найден хотя бы один итальянский голос
@@ -53,27 +54,34 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
 
-    // Функция для сохранения выбранного голоса в localStorage
-    function saveSelectedVoice(selectedVoiceId) {
+    // Функция для сохранения выбранного голоса и его языка в localStorage
+    function saveSelectedVoice(selectedVoiceId, selectedVoiceLang) {
         if (localStorage) {
             localStorage.setItem('selectedVoice', selectedVoiceId);
+            localStorage.setItem('selectedVoiceLang', selectedVoiceLang); // Сохраняем язык голоса
             console.log("сохранили в локалстораджа")
         } else {
             console.log("нет локалстораджа")
         }
     }
 
-    // Функция для получения выбранного голоса из localStorage
+
+    // Функция для получения выбранного голоса и его языка из localStorage
     function getSelectedVoice() {
         if (localStorage) {
-            return localStorage.getItem('selectedVoice');
-            console.log("восстановили из локалстораджа")
-
-        } else {
-            console.log("нет локалстораджа")
-            return null;
+            var selectedVoiceId = localStorage.getItem('selectedVoice');
+            var selectedVoiceLang = localStorage.getItem('selectedVoiceLang');
+            if (selectedVoiceId && selectedVoiceLang) {
+                return {
+                    voiceId: selectedVoiceId,
+                    voiceLang: selectedVoiceLang
+                };
+            }
         }
+        console.log("нет сохраненного голоса в локальном хранилище");
+        return null;
     }
+
 
     // Проверяем, находимся ли мы на странице settings.php
     if (document.location.pathname === "/settings.php") {
@@ -113,12 +121,14 @@ document.addEventListener("DOMContentLoaded", function () {
         // Обработчик события для кнопки "Установить этот голос по умолчанию"
         document.getElementById("setDefaultVoiceButton").addEventListener("click", function () {
             var selectedVoiceId = document.getElementById("selectVoice").selectedOptions[0].getAttribute("data-voice-id");
+            var selectedVoiceLang = document.getElementById("selectVoice").selectedOptions[0].getAttribute("voice-lang"); // Получаем язык выбранного голоса
+
             console.log(selectedVoiceId);
             
             // Устанавливаем выбранный голос по умолчанию для всех итальянских слов на сайте
             setDefaultVoiceForItalian(selectedVoiceId);
             // Сохраняем выбранный голос в localStorage
-            saveSelectedVoice(selectedVoiceId);
+            saveSelectedVoice(selectedVoiceId, selectedVoiceLang);
         });
 
         // Функция для установки выбранного голоса по умолчанию для всех итальянских слов на сайте
@@ -375,14 +385,35 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // Выполняем только на странице cards.php
     if (document.location.pathname === "/cards.php") {
-
         // Добавляем обработчик события для кнопки произношения слова
         document.getElementById('speakWordButton').addEventListener('click', function() {
             var currentWord = document.getElementById('word').innerText;
             var selectedLanguage = document.getElementById('word').getAttribute('lang'); // Получаем выбранный язык из атрибута lang
-            // Произносим текущее слово с выбранным языком
-            speakText(currentWord, selectedLanguage);
+            
+            // Получаем сохраненный голос и его язык из localStorage
+            var savedVoice = getSelectedVoice();
+            console.log("Голос загружен:");
+            console.log(savedVoice.voiceId);
+            console.log("Язык Голоса:");
+            console.log(savedVoice.voiceLang);
+
+            console.log("Язык слова в карточке:");
+            console.log(selectedLanguage);
+
+
+            // Если в localStorage есть сохраненный голос и язык совпадает с выбранным языком
+            if (savedVoice && savedVoice.voiceLang === selectedLanguage) {
+                console.log("Используем сохраненный голос");
+                // Произносим текущее слово с выбранным языком и сохраненным голосом
+                speakText(currentWord, savedVoice.voiceId);
+            } else {
+                console.log("Используем выбранный язык");
+                // Произносим текущее слово с выбранным языком
+                speakText(currentWord, selectedLanguage);
+            }
         });
+
+
 
         // Получаем все кнопки озвучки вариантов ответов
         var speakButtons = document.querySelectorAll('.speakButton');
@@ -392,10 +423,14 @@ document.addEventListener("DOMContentLoaded", function () {
             button.addEventListener('click', function() {
                 var answerText = this.previousElementSibling.innerText; // Получаем текст ответа, предшествующего кнопке
                 var selectedLanguage = this.previousElementSibling.getAttribute('lang'); // Получаем выбранный язык из атрибута lang
-                // Произносим текст ответа с выбранным языком
-                speakText(answerText, selectedLanguage);
+                // Получаем сохраненный голос из localStorage
+                var savedVoice = getSelectedVoice();
+                // Произносим текст ответа с выбранным языком и сохраненным голосом, если он есть, иначе используем стандартный голос (null)
+                speakText(answerText, selectedLanguage, savedVoice ? savedVoice : null);
             });
         });
+
+
 
         // Загрузка общего количества записей при загрузке страницы
         loadTotalCount();
