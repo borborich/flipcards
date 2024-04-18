@@ -29,6 +29,8 @@
                 <label for="pitchRange">Высота произношения: <span id="pitchValue">1</span></label>
                 <input type="range" id="pitchRange" min="0.1" max="2" step="0.1" value="1" class="form-control mb-3">
                 <button id="speakTextButton" class="btn btn-primary">Произнести текст</button>
+                <button id="setDefaultVoiceButton" class="btn btn-primary">Установить этот голос по умолчанию для Итальянского</button>
+
             </div>
         </div>
     </div>

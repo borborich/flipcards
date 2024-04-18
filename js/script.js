@@ -10,26 +10,76 @@ document.addEventListener("DOMContentLoaded", function () {
         var selectVoice = document.getElementById('selectVoice');
         // Очищаем список перед добавлением новых голосов
         selectVoice.innerHTML = '';
+
+        // Получаем сохраненный голос из localStorage
+        var savedVoice = getSelectedVoice();
+
+        // Если есть сохраненный голос, добавляем его в начало списка
+        if (savedVoice) {
+            var savedOption = document.createElement('option');
+            savedOption.textContent = savedVoice + ' (сохраненный)';
+            savedOption.setAttribute('data-voice-id', savedVoice);
+            selectVoice.appendChild(savedOption);
+        }
+
         // Добавляем каждый доступный голос в список
         var voices = window.speechSynthesis.getVoices();
         if (voices.length > 0) {
+            var italianVoicesFound = false; // Флаг для обозначения наличия итальянских голосов
             voices.forEach(function(voice) {
-                var option = document.createElement('option');
-                option.textContent = voice.name + ' (' + voice.lang + ')';
-                // Сохраняем идентификатор голоса в data-voice-id
-                option.setAttribute('data-voice-id', voice.name);
-                selectVoice.appendChild(option);
+                // Проверяем язык голоса
+                if (voice.lang.startsWith('it-')) { // Проверяем, начинается ли язык с 'it-'
+                    // Проверяем, не был ли этот голос уже добавлен как сохраненный
+                    if (savedVoice !== voice.name) {
+                        var option = document.createElement('option');
+                        option.textContent = voice.name + ' (' + voice.lang + ')';
+                        // Сохраняем идентификатор голоса в data-voice-id
+                        option.setAttribute('data-voice-id', voice.name);
+                        selectVoice.appendChild(option);
+                    }
+                    italianVoicesFound = true; // Устанавливаем флаг в true, если найден хотя бы один итальянский голос
+                }
             });
+            if (!italianVoicesFound) {
+                // Если не найдено итальянских голосов, добавляем сообщение
+                var option = document.createElement('option');
+                option.textContent = 'В вашей системе не установлен итальянский язык';
+                selectVoice.appendChild(option);
+            }
         } else {
             // Если список голосов пуст, попробуйте загрузить его снова через некоторое время
             setTimeout(populateVoiceList, 500);
         }
     }
 
+
+    // Функция для сохранения выбранного голоса в localStorage
+    function saveSelectedVoice(selectedVoiceId) {
+        if (localStorage) {
+            localStorage.setItem('selectedVoice', selectedVoiceId);
+            console.log("сохранили в локалстораджа")
+        } else {
+            console.log("нет локалстораджа")
+        }
+    }
+
+    // Функция для получения выбранного голоса из localStorage
+    function getSelectedVoice() {
+        if (localStorage) {
+            return localStorage.getItem('selectedVoice');
+            console.log("восстановили из локалстораджа")
+
+        } else {
+            console.log("нет локалстораджа")
+            return null;
+        }
+    }
+
     // Проверяем, находимся ли мы на странице settings.php
     if (document.location.pathname === "/settings.php") {
         // Если да, вызываем функцию для заполнения списка голосов
-        setTimeout(populateVoiceList, 600); // Задержка 600 миллисекунд (или другое подходящее значение)
+        setTimeout(populateVoiceList, 100); // Задержка 600 миллисекунд (или другое подходящее значение)
+
 
         // Обработчик события для кнопки "Произнести текст"
         document.getElementById("speakTextButton").addEventListener("click", function () {
@@ -60,6 +110,33 @@ document.addEventListener("DOMContentLoaded", function () {
             // Обновляем отображаемое значение высоты
             document.getElementById("pitchValue").textContent = pitchValue.toFixed(1);
         });
+        // Обработчик события для кнопки "Установить этот голос по умолчанию"
+        document.getElementById("setDefaultVoiceButton").addEventListener("click", function () {
+            var selectedVoiceId = document.getElementById("selectVoice").selectedOptions[0].getAttribute("data-voice-id");
+            console.log(selectedVoiceId);
+            
+            // Устанавливаем выбранный голос по умолчанию для всех итальянских слов на сайте
+            setDefaultVoiceForItalian(selectedVoiceId);
+            // Сохраняем выбранный голос в localStorage
+            saveSelectedVoice(selectedVoiceId);
+        });
+
+        // Функция для установки выбранного голоса по умолчанию для всех итальянских слов на сайте
+        function setDefaultVoiceForItalian(voiceId) {
+            // Получаем все элементы на странице, содержащие текстовое содержание на итальянском языке
+            var italianElements = document.querySelectorAll('[lang^="it-"]');
+            
+            // Устанавливаем выбранный голос по умолчанию для каждого элемента
+            italianElements.forEach(function(element) {
+                var synth = window.speechSynthesis;
+                var utterance = new SpeechSynthesisUtterance();
+                utterance.voice = synth.getVoices().find(function(voice) {
+                    return voice.name === voiceId;
+                });
+                synth.speak(utterance);
+            });
+        }
+
     }
 
     // Функция для произношения текста с указанными настройками
