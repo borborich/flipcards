@@ -14,7 +14,7 @@
         <h1>Настройки</h1>
         <div class="row">
             <div class="col">
-                <h3>Выберите язык</h3>
+                <h3>Выберите голос</h3>
                     <select id="selectVoice" class="form-control mb-3">
                         <!-- Опции будут добавлены динамически с помощью JavaScript -->
                     </select>
@@ -23,7 +23,7 @@
         <div class="row">
             <div class="col">
                 <h3>Введите текст для произнесения</h3>
-                <textarea id="textInput" class="form-control mb-3" rows="3"></textarea>
+                <textarea id="textInput" class="form-control mb-3" rows="3">"La vita è come una bicicletta: per mantenere l'equilibrio, devi continuare a muoverti avanti." - Albert Einstein</textarea>
                 <label for="speedRange">Скорость произношения: <span id="speedValue">1</span></label>
                 <input type="range" id="speedRange" min="0.1" max="2" step="0.1" value="1" class="form-control mb-3">
                 <label for="pitchRange">Высота произношения: <span id="pitchValue">1</span></label>
