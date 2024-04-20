@@ -21,6 +21,8 @@
     <title>Поблагодарить Шестаковых</title>
     <link href="css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="css/style.css?version=2">
+    <script defer type="module" src="js/script.js?version=2.1"></script>
+
     <!-- Google tag (gtag.js) -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-T24M5R7GHF"></script>
     <script>
@@ -32,22 +34,36 @@
     </script>
 </head>
 <body>
-    <!-- Добавленные кнопки -->
-    <div class="container mt-2">
-        <div class="row">
-            <div class="col text-left">
-                <a href="index.php" class="btn btn-secondary">🏠 Главная</a>
-            </div>
-            <div class="col text-center">
-                <a href="table.php" class="btn btn-secondary">📚 Таблицы</a>
-            </div>
-            <div class="col text-right">
-                <a href="cards.php" class="btn btn-secondary">🗂️ Карточки</a>
-            </div>
-        </div>
-    </div>
-    <div class="container mt-2">
-        <div class="row justify-content-center">
+
+    <div class="container">
+        <nav class="navbar navbar-expand-lg navbar-light bg-light">
+          <a class="navbar-brand" href="#">&nbsp;</a>
+          <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+
+          <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav mr-auto">
+              <li class="nav-item">
+                <a class="nav-link" href="index.php">🏠 Домашняя <span class="sr-only">(current)</span></a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="table.php">📚 Таблицы</a>
+              </li>
+
+              <li class="nav-item">
+                <a class="nav-link" href="cards.php">🗂️ Карточки</a>
+              </li>
+              <li class="nav-item active">
+                <a class="nav-link" href="donate.php">👍 Поддержать приложение</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="settings.php">⚙️ Настройки озвучивания</a>
+              </li>
+            </ul>
+          </div>
+        </nav>
+        <div class="row justify-content-center mt-3">
             <div class="col-md-12">
                 <div class="card mb-3">
                     <div class="card-body">
@@ -58,7 +74,7 @@
                        <ul>
                            <li>📚 Добавить другие языки для изучения</li>
                            <li>🪪 Сделать персональные аккаунты с возможностью создавать свои таблицы</li>
-                           <li>🔊 Аудио произношение слов 🗣️ (✅ реализовано)</li>
+                           <li>🔊 Аудио произношение слов 🗣️ (✅ реализовано v2 с выбором голосов)</li>
                            <li>🔥 Ваши варианты от 200€ 😉</li>
                        </ul>
                        <br>

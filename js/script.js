@@ -6,6 +6,33 @@ document.addEventListener("DOMContentLoaded", function () {
     let incorrectAnswers = 0; // Количество ошибочных ответов
     //var voices = window.speechSynthesis.getVoices();
 
+    const navbarToggle = document.querySelector('.navbar-toggler');
+    const navbarCollapse = document.querySelector('#navbarSupportedContent');
+
+    navbarToggle.addEventListener('click', function() {
+      console.log("нажали меню");
+      if (navbarCollapse.classList.contains('collapse')) {
+        navbarCollapse.classList.remove('collapse');
+        navbarCollapse.classList.add('collapsing');
+        navbarCollapse.style.height = 'auto';
+        const height = navbarCollapse.scrollHeight + 'px';
+        navbarCollapse.style.height = '0';
+        setTimeout(function() {
+          navbarCollapse.style.height = height;
+        }, 1);
+      } else {
+        navbarCollapse.style.height = navbarCollapse.scrollHeight + 'px';
+        navbarCollapse.classList.add('collapsing');
+        navbarCollapse.style.height = '0';
+        setTimeout(function() {
+          navbarCollapse.classList.remove('collapsing');
+          navbarCollapse.classList.add('collapse');
+          navbarCollapse.style.height = '';
+        }, 350);
+      }
+    });
+
+
     function getAllVoices () {
         var voices = window.speechSynthesis.getVoices();
         if (voices.length > 0) {
@@ -30,8 +57,16 @@ document.addEventListener("DOMContentLoaded", function () {
             var savedOption = document.createElement('option');
             savedOption.textContent = savedVoice.voiceId + ' (сохраненный)';
             savedOption.setAttribute('data-voice-id', savedVoice.voiceId);
+            savedOption.setAttribute('voice-lang', savedVoice.voiceLang);
             selectVoice.appendChild(savedOption);
+
+            // Установка значения для элемента с id speedRange
+            document.getElementById('speedRange').value = savedVoice.speedValue;
+
+            // Установка значения для элемента с id pitchRange
+            document.getElementById('pitchRange').value = savedVoice.pitchValue;
         }
+
 
         // Добавляем каждый доступный голос в список
         var voices = window.speechSynthesis.getVoices();
@@ -66,11 +101,18 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
     // Функция для сохранения выбранного голоса и его языка в localStorage
-    function saveSelectedVoice(selectedVoiceId, selectedVoiceLang) {
+    function saveSelectedVoice(selectedVoiceId, selectedVoiceLang, speedValue, pitchValue) {
         if (localStorage) {
             localStorage.setItem('selectedVoice', selectedVoiceId);
             localStorage.setItem('selectedVoiceLang', selectedVoiceLang); // Сохраняем язык голоса
+            localStorage.setItem('speedValue', speedValue);
+            localStorage.setItem('pitchValue', pitchValue);
             console.log("сохранили в локалстораджа")
+            console.log(selectedVoiceId)
+            console.log(selectedVoiceLang)
+            console.log(speedValue)
+            console.log(pitchValue)
+
         } else {
             console.log("нет локалстораджа")
         }
@@ -82,10 +124,21 @@ document.addEventListener("DOMContentLoaded", function () {
         if (localStorage) {
             var selectedVoiceId = localStorage.getItem('selectedVoice');
             var selectedVoiceLang = localStorage.getItem('selectedVoiceLang');
-            if (selectedVoiceId && selectedVoiceLang) {
+            var speedValue = localStorage.getItem('speedValue');
+            var pitchValue = localStorage.getItem('pitchValue');
+
+            if (selectedVoiceId) {
+                console.log("достали из localStorage")
+                console.log(selectedVoiceId)
+                console.log(selectedVoiceLang)
+                console.log(speedValue)
+                console.log(pitchValue)
                 return {
                     voiceId: selectedVoiceId,
-                    voiceLang: selectedVoiceLang
+                    voiceLang: selectedVoiceLang,
+                    speedValue: speedValue,
+                    pitchValue: pitchValue
+
                 };
             }
         }
@@ -97,7 +150,7 @@ document.addEventListener("DOMContentLoaded", function () {
     // Проверяем, находимся ли мы на странице settings.php
     if (document.location.pathname === "/settings.php") {
         // Если да, вызываем функцию для заполнения списка голосов
-        setTimeout(populateVoiceList, 100); // Задержка 600 миллисекунд (или другое подходящее значение)
+        setTimeout(populateVoiceList, 100); // Задержка 100 миллисекунд (или другое подходящее значение)
 
 
         // Обработчик события для кнопки "Произнести текст"
@@ -129,13 +182,19 @@ document.addEventListener("DOMContentLoaded", function () {
             // Обновляем отображаемое значение высоты
             document.getElementById("pitchValue").textContent = pitchValue.toFixed(1);
         });
-        // Обработчик события для кнопки "Установить этот голос по умолчанию"
         document.getElementById("setDefaultVoiceButton").addEventListener("click", function () {
             var selectedVoiceId = document.getElementById("selectVoice").selectedOptions[0].getAttribute("data-voice-id");
-            var selectedVoiceLang = document.getElementById("selectVoice").selectedOptions[0].getAttribute("voice-lang"); // Получаем язык выбранного голоса
+            var selectedVoiceLang = document.getElementById("selectVoice").selectedOptions[0].getAttribute("voice-lang");
+            var speedValue = parseFloat(document.getElementById("speedRange").value);
+            var pitchValue = parseFloat(document.getElementById("pitchRange").value);
             // Сохраняем выбранный голос в localStorage
-            saveSelectedVoice(selectedVoiceId, selectedVoiceLang);
+            saveSelectedVoice(selectedVoiceId, selectedVoiceLang, speedValue, pitchValue);
+            console.log(`передали в сохранение: ${selectedVoiceId} ${selectedVoiceLang} ${speedValue} ${pitchValue}`);
+
+            // Показываем уведомление
+            alert(`Настройки успешно сохранены! Голос: ${selectedVoiceId}, Скорость: ${speedValue}, Высота: ${pitchValue}`);
         });
+
 
     }
 
@@ -149,6 +208,8 @@ document.addEventListener("DOMContentLoaded", function () {
         var utterance = new SpeechSynthesisUtterance(text);
         console.log("смотрим какой голос передан в speakText");
         console.log(selectedVoice);
+        console.log(speed);
+        console.log(pitch);
         if (selectedVoice != undefined) {
             console.log("передали голос");
 
@@ -399,15 +460,16 @@ document.addEventListener("DOMContentLoaded", function () {
             
             // Получаем сохраненный голос и его язык из localStorage
             var savedVoice = getSelectedVoice();
-            console.log("Голос загружен:");
-            console.log(savedVoice.voiceId);
-            
             
             // Если в localStorage есть сохраненный голос и язык совпадает с выбранным языком
             if (savedVoice && savedVoice.voiceLang === selectedLanguage) {
+                console.log("Голос загружен:");
+                console.log(savedVoice.voiceId);
+                console.log(savedVoice.speedValue);
+                console.log(savedVoice.pitchValue);
                 console.log("Используем сохраненный голос");
                 // Произносим текущее слово с выбранным языком и сохраненным голосом
-                speakText(currentWord, savedVoice.voiceId);
+                speakText(currentWord, savedVoice.voiceId, savedVoice.speedValue, savedVoice.pitchValue);
             } else {
                 console.log("Используем выбранный язык");
                 // Произносим текущее слово с выбранным языком
@@ -433,7 +495,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 if (savedVoice && savedVoice.voiceLang === selectedLanguage) {
                     console.log("Используем сохраненный голос");
                     // Произносим текущее слово с выбранным языком и сохраненным голосом
-                    speakText(answerText, savedVoice.voiceId);
+                    speakText(answerText, savedVoice.voiceId, savedVoice.speedValue, savedVoice.pitchValue);
                 } else {
                     console.log("Используем выбранный язык");
                     // Произносим текущее слово с выбранным языком
@@ -489,8 +551,37 @@ document.addEventListener("DOMContentLoaded", function () {
         updateCounters();
     }
 
+
+
+// ---------------- TABLE.PHP -------------------- //
+
+    // Выполняем только на странице table.php
+    if (document.location.pathname === "/table.php") {
+
+        setTimeout(getAllVoices, 500);
+        // Обработчик события изменения значения в списке выбора темы
+        const themeSelect = document.getElementById('theme-select-table');
+        themeSelect.addEventListener('change', function(event) {
+            const selectedTheme = themeSelect.value;
+            loadWordsByTheme(selectedTheme);
+
+            // Обновляем ссылки на главную страницу с выбранной темой
+            const cardsLinks = document.querySelectorAll('.cards-link'); // Получаем все ссылки с классом cards-link
+            cardsLinks.forEach(link => {
+                link.href = `cards.php?theme=${selectedTheme}`; // Обновляем значение href для каждой ссылки
+            });
+
+            // Показываем скрытые элементы после выбора темы
+            document.querySelectorAll('#below-form-content, #word-table, .cards-link').forEach(element => {
+                element.style.display = 'block';
+            });            
+        });
+    }
     // Функция для загрузки слов по выбранной теме
     function loadWordsByTheme(theme) {
+        // Получаем сохраненный голос и его язык из localStorage
+        var savedVoice = getSelectedVoice();
+
         fetch(`backend/get_words.php?theme=${theme}`)
             .then(response => response.json())
             .then(data => {
@@ -515,7 +606,16 @@ document.addEventListener("DOMContentLoaded", function () {
 
                     // Добавляем обработчик события клика для иностранного слова
                     foreignWordCell.addEventListener('click', function() {
-                        speakText(pair.foreign_word, pair.foreign_word_lang);
+                        if (savedVoice) {
+                            console.log("Голос загружен:");
+                            console.log(savedVoice.voiceId);
+                            console.log(savedVoice.speedValue);
+                            console.log(savedVoice.pitchValue);
+                            speakText(pair.foreign_word, savedVoice.voiceId, savedVoice.speedValue, savedVoice.pitchValue);
+                        } else {
+                            speakText(pair.foreign_word, pair.foreign_word_lang);
+                        }
+                        
                     });
 
                     russianWordCell.addEventListener('click', function() {
@@ -531,30 +631,10 @@ document.addEventListener("DOMContentLoaded", function () {
             .catch(error => console.error('Error:', error));
     }
 
-    // Выполняем только на странице table.php
-    if (document.location.pathname === "/table.php") {
-
-        // Обработчик события изменения значения в списке выбора темы
-        const themeSelect = document.getElementById('theme-select-table');
-        themeSelect.addEventListener('change', function(event) {
-            const selectedTheme = themeSelect.value;
-            loadWordsByTheme(selectedTheme);
-
-            // Обновляем ссылки на главную страницу с выбранной темой
-            const cardsLinks = document.querySelectorAll('.cards-link'); // Получаем все ссылки с классом cards-link
-            cardsLinks.forEach(link => {
-                link.href = `cards.php?theme=${selectedTheme}`; // Обновляем значение href для каждой ссылки
-            });
-
-            // Показываем скрытые элементы после выбора темы
-            document.querySelectorAll('#below-form-content, #word-table, .cards-link').forEach(element => {
-                element.style.display = 'block';
-            });            
-        });
-    }
-
 
 });
+
+
 
 // Функция для добавления эффекта разлетающихся эмодзи 👍
 function addFlyingEffect(element) {

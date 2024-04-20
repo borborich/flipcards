@@ -38,6 +38,15 @@ body {
     box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19); /* Эффект тени */
 }
 
+.mcollapsing {
+  transition: height 0.35s ease;
+}
+
+.mcollapsed {
+  height: 0 !important;
+  overflow: hidden;
+}
+
 /* Стиль для кнопки закрытия модального окна */
 .close {
     color: #aaa;
@@ -224,5 +233,7 @@ body {
 .cards-link {
     display: none; 
 }
+
+
 
 

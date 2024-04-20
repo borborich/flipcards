@@ -26,6 +26,7 @@
     <title>Добро пожаловать!</title>
     <link href="css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="css/style.css?version=2">
+    <script defer type="module" src="js/script.js?version=2.1"></script>
     <!-- Google tag (gtag.js) -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-T24M5R7GHF"></script>
     <script>
@@ -37,20 +38,35 @@
     </script>
 </head>
 <body>
-    <div class="container mt-2">
-        <div class="row">
-            <div class="col text-left">
-                <a href="table.php" class="btn btn-secondary">📚 Таблицы</a>
-            </div>
-            <div class="col text-center">
-                <a href="donate.php" class="btn btn-secondary">👍 Поддержать</a>
-            </div>            
-            <div class="col text-right">
-                <a href="cards.php" class="btn btn-secondary">🗂️ Карточки</a>
-            </div>
-        </div>
-    </div>
-    <div class="container mt-2">
+
+    <div class="container">
+        <nav class="navbar navbar-expand-lg navbar-light bg-light">
+          <a class="navbar-brand" href="Домашняя">&nbsp;</a>
+          <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+
+          <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav mr-auto">
+              <li class="nav-item active">
+                <a class="nav-link" href="index.php">🏠 Домашняя</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="table.php">📚 Таблицы</a>
+              </li>
+
+              <li class="nav-item">
+                <a class="nav-link" href="cards.php">🗂️ Карточки</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="donate.php">👍 Поддержать приложение</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="settings.php">⚙️ Настройки озвучивания</a>
+              </li>
+            </ul>
+          </div>
+        </nav>
         <h1>Ciao дорогие! 👋</h1>
         <p>Это веб приложение для запоминания итальянских слов(планируется добавление других языков) 🇮🇹 <br><br>
             <a target="_blank" href="https://youtu.be/VSgh0XTe1Ig?si=JqMYCZkN5eL6t9iX">Видео о том как эффективнее пользоваться приложением</a><br><br>
@@ -77,7 +93,7 @@
         <p>Пользуйтесь с удовольствием, если нашли 🚫 ошикби или неточности можете ✍️ написать мне <a href="mailto:boris@shbb.pro">boris@shbb.pro</a>, код приложения открыт публично, можно делать pull request на <a href="https://github.com/borborich/flipcards">github</a>, при вашей 🤲 <a href="donate.php">поддержке</a> приложение будет развиваться, будут добавлены другие 🗣️ языки, будет сделан личный кабинет, с возможностью добавлять собственные 📋 списки слов и фраз каждому, 🔊 Аудио произношение слов (✅ реализовано). Для вашего комфорта на сайте используется cookies google analytics для анализа посещений, продолжая пользоваться сайтом вы с этим соглашаетесь. 🍪</p>
     </div>
 
-    <div class="container mt-2">
+<!--     <div class="container mt-2">
         <div class="row">
             <div class="col text-left">
                 <a href="table.php" class="btn btn-secondary">📚 Таблицы</a>
@@ -89,6 +105,6 @@
                 <a href="cards.php" class="btn btn-secondary">🗂️ Карточки</a>
             </div>
         </div>
-    </div>
+    </div> -->
 </body>
 </html>
