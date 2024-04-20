@@ -235,5 +235,30 @@ body {
 }
 
 
+.blurry-container {
+    position: relative;
+}
 
+.blurry-content {
+    filter: blur(8px); /* Измените значение по вашему вкусу для желаемого эффекта размытия */
+    pointer-events: none; /* Препятствует взаимодействию с содержимым внутри размытого блока */
+}
+
+.show-options-overlay {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 18px;
+    color: black;
+    background-color: rgb(255 255 255 / 50%);
+    padding: 10px 20px;
+    cursor: pointer;
+    border-radius: 5px;
+    font-size: small;
+}
+
+.speakButton {
+    pointer-events: auto;
+}
 

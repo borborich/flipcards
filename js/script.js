@@ -234,6 +234,9 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
     function loadWord() {
+        const blurryContainer = document.querySelector('.blurry-content');
+        const choices = document.querySelectorAll('.choice');
+        const showOptionsOverlay = document.querySelector('.show-options-overlay');
         console.log('Loading word...'); // Отладочный вывод
         const langParam = document.getElementById('word').getAttribute('data-lang'); // Получаем текущее направление языков
         console.log('Текущий языковой параметр:', langParam);
@@ -307,7 +310,15 @@ document.addEventListener("DOMContentLoaded", function () {
                         showModal('Ошибка сети 📡 😔', 'Проверьте соединение с интернетом 📶 🌐 🤳 \nи помните, что отдых очень полезен для запоминания 💤 😘');
                     }
                 });
+
+ 
         };
+
+        blurryContainer.style.filter = "blur(8px)";
+        showOptionsOverlay.style.display = 'block';
+        choices.forEach(choice => {
+            choice.style.pointerEvents = 'none';
+        });  
 
         return fetchWord();
     }
@@ -451,6 +462,7 @@ document.addEventListener("DOMContentLoaded", function () {
     // Выполняем только на странице cards.php
     if (document.location.pathname === "/cards.php") {
 
+
         setTimeout(getAllVoices, 500);
         // Добавляем обработчик события для кнопки произношения слова
         document.getElementById('speakWordButton').addEventListener('click', function() {
@@ -510,6 +522,7 @@ document.addEventListener("DOMContentLoaded", function () {
         loadTotalCount();
         // Загрузка первого слова при загрузке страницы
         loadWord();
+
         // Обновление количества записей при изменении выбранной темы
         document.getElementById('theme-select').addEventListener('change', function () {
             const selectedTheme = this.value;
@@ -527,6 +540,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
             // Добавляем вызов функции загрузки слов при изменении выбранной темы
             loadWord(); 
+
         });
 
 
@@ -546,6 +560,22 @@ document.addEventListener("DOMContentLoaded", function () {
             loadWord();
 
         });
+
+        document.querySelector(".blurry-container").addEventListener('click', function () {
+            const blurryContainer = document.querySelector('.blurry-content');
+            const choices = document.querySelectorAll('.choice');
+            const showOptionsOverlay = document.querySelector('.show-options-overlay');
+            blurryContainer.style.filter = "none";
+            
+            showOptionsOverlay.style.display = 'none';
+            // Сделать блоки с кнопками вновь доступными для нажатия
+            
+            choices.forEach(choice => {
+                choice.style.pointerEvents = 'auto';
+            });            
+        });
+
+
 
         // Вызов функции обновления счетчиков
         updateCounters();

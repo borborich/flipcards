@@ -20,7 +20,8 @@
     <link rel="icon" type="image/png" sizes="32x32" href="img/favicon.png">
     <title>Изучение иностранных слов</title>
     <link href="css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="css/style.css?version=2">
+    <link rel="stylesheet" href="css/style.css?version=2.2">
+    <script defer type="module" src="js/script.js?version=2.2"></script>
     <!-- Google tag (gtag.js) -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-T24M5R7GHF"></script>
     <script>
@@ -105,46 +106,50 @@
 
 
 
-
-        <div class="row mt-3">
-            <div class="col">
-                <div class="row mt-2">
-                    <div class="col d-flex">
-                        <div class="choice" lang="">
-                            <!-- вариант ответа подставляется в js -->
+        <div class="blurry-container">
+            <div class="blurry-content">
+                <div class="row mt-3">
+                    <div class="col">
+                        <div class="row mt-2">
+                            <div class="col d-flex">
+                                <div class="choice" lang="">
+                                    <!-- вариант ответа подставляется в js -->
+                                </div>
+                                <button class="btn btn-sm btn-success speakButton ml-2">🔊</button>
+                            </div>
                         </div>
-                        <button class="btn btn-sm btn-success speakButton ml-2">🔊</button>
-                    </div>
-                </div>
-                <div class="row mt-2">
-                    <div class="col d-flex">
-                        <div class="choice" lang="">
-                            <!-- вариант ответа подставляется в js -->
+                        <div class="row mt-2">
+                            <div class="col d-flex">
+                                <div class="choice" lang="">
+                                    <!-- вариант ответа подставляется в js -->
+                                </div>
+                                <button class="btn btn-sm btn-success speakButton ml-2">🔊</button>
+                            </div>
                         </div>
-                        <button class="btn btn-sm btn-success speakButton ml-2">🔊</button>
-                    </div>
-                </div>
-                <div class="row mt-2">
-                    <div class="col d-flex">
-                        <div class="choice" lang="">
-                            <!-- вариант ответа подставляется в js -->
+                        <div class="row mt-2">
+                            <div class="col d-flex">
+                                <div class="choice" lang="">
+                                    <!-- вариант ответа подставляется в js -->
+                                </div>
+                                <button class="btn btn-sm btn-success speakButton ml-2">🔊</button>
+                            </div>
                         </div>
-                        <button class="btn btn-sm btn-success speakButton ml-2">🔊</button>
-                    </div>
-                </div>
-                <div class="row mt-2">
-                    <div class="col d-flex">
-                        <div class="choice" lang="">
-                            <!-- вариант ответа подставляется в js -->
+                        <div class="row mt-2">
+                            <div class="col d-flex">
+                                <div class="choice" lang="">
+                                    <!-- вариант ответа подставляется в js -->
+                                </div>
+                                <button class="btn btn-sm btn-success speakButton ml-2">🔊</button>
+                            </div>
                         </div>
-                        <button class="btn btn-sm btn-success speakButton ml-2">🔊</button>
                     </div>
                 </div>
             </div>
+            <div class="show-options-overlay">Показать варианты</div>
         </div>
     </div>
 
 
-    <script defer type="module" src="js/script.js?version=2.1"></script>
+    
 </body>
 </html>

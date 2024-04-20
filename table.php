@@ -20,7 +20,8 @@
     <link rel="icon" type="image/png" sizes="32x32" href="img/favicon.png">
     <title>Таблица слов</title>
     <link href="css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="css/style.css?version=2">
+    <link rel="stylesheet" href="css/style.css?version=2.2">
+    <script src="js/script.js?version=2.2"></script>
     <!-- Google tag (gtag.js) -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-T24M5R7GHF"></script>
     <script>
@@ -96,6 +97,6 @@
         </div>
     </div>
 
-    <script src="js/script.js?version=2"></script>
+    
 </body>
 </html>

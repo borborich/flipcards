@@ -20,8 +20,8 @@
     <link rel="icon" type="image/png" sizes="32x32" href="img/favicon.png">
     <title>Настройки</title>
     <link href="css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="css/style.css?version=2">
-    <script defer type="module" src="js/script.js?version=2.1"></script>
+    <link rel="stylesheet" href="css/style.css?version=2.2">
+    <script defer type="module" src="js/script.js?version=2.2"></script>
 
     <!-- Google tag (gtag.js) -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-T24M5R7GHF"></script>
