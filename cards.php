@@ -53,6 +53,9 @@
               <li class="nav-item active">
                 <a class="nav-link" href="cards.php">🗂️ Карточки</a>
               </li>
+              <li class="nav-item ">
+                <a class="nav-link" href="topics.php">📖 Топики <span style="color:red; font-weight: bold;"> new!</span> </a>
+              </li>
               <li class="nav-item">
                 <a class="nav-link" href="donate.php">👍 Поддержать приложение</a>
               </li>

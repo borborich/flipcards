@@ -49,8 +49,11 @@
               <li class="nav-item">
                 <a class="nav-link" href="table.php">📚 Таблицы</a>
               </li>
+              <li class="nav-item">
+                <a class="nav-link" href="cards.php">🗂️ Карточки</a>
+              </li>
               <li class="nav-item active">
-                <a class="nav-link" href="topics.php">🗂️ Топики</a>
+                <a class="nav-link" href="topics.php">📖 Топики <span style="color:red; font-weight: bold;"> new!</span> </a>
               </li>
               <li class="nav-item">
                 <a class="nav-link" href="donate.php">👍 Поддержать приложение</a>
@@ -61,26 +64,74 @@
             </ul>
           </div>
         </nav>
+
         <div class="row mt-3">
             <div class="col">
-                <h1>Случайный топик</h1>
+                
+                
+                <form id="topic-form" class="mb-3">
+                    <select id="topic-select" class="form-control">
+                        <!-- Опции будут добавлены динамически с помощью JavaScript -->
+                    </select>
+                </form>
+                
                 <div id="topic-content" class="mt-4">
+                    <h2 id="title"></h2>
+                    <p>
+                        <audio controls id="audio-player" controlslist="nodownload" preload="none">
+                            <!-- Если браузер не поддерживает аудиоплеер, вы можете отобразить сообщение об ошибке -->
+                            Ваш браузер не поддерживает аудио элемент.
+                        </audio>
+                    </p>
                     <p id="topic-text"></p>
-                    <p><strong>Аудио файл:</strong> <span id="audio-file"></span></p>
+
+                    <br><br>
+                    <p><a href="donate.php"><small>Поддержать проект 👍</small></a><br>
+                        <small style="color: #8b8b8b;">Развитие проекта возможно только при вашей поддержке</small>
+                    </p>
                 </div>
             </div>
         </div>
+
     </div>
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
+            var topicSelect = document.getElementById('topic-select');
+            
+            // Загрузка списка топиков
             fetch('backend/get_topics.php')
                 .then(response => response.json())
                 .then(data => {
-                    document.getElementById('topic-text').innerText = data.topic;
-                    document.getElementById('audio-file').innerText = data.audio_file;
+                    data.forEach(topic => {
+                        var option = document.createElement('option');
+                        option.value = topic.id;
+                        option.textContent = topic.title;
+                        topicSelect.appendChild(option);
+                    });
+                    // После загрузки списка выберем первый топик
+                    loadTopic(topicSelect.value);
                 })
                 .catch(error => console.error('Ошибка:', error));
+
+            // Обработчик события изменения выбора топика
+            topicSelect.addEventListener('change', function() {
+                var selectedTopicId = this.value;
+                loadTopic(selectedTopicId);
+            });
+
+            // Функция загрузки топика по ID
+            function loadTopic(topicId) {
+                fetch('backend/get_topics.php?id=' + topicId)
+                    .then(response => response.json())
+                    .then(data => {
+                        document.getElementById('title').innerText = data.title;
+                        document.getElementById('topic-text').innerText = data.topic;
+                        var audioPlayer = document.getElementById('audio-player');
+                        audioPlayer.src = data.audio_file;
+                    })
+                    .catch(error => console.error('Ошибка:', error));
+            }
         });
     </script>
 
